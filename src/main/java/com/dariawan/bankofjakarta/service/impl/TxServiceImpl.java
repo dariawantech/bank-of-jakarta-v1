@@ -195,6 +195,7 @@ public class TxServiceImpl implements TxService {
             Tx tx = new Tx(String.valueOf(nextId.getId()), account.getAccountId(), new Date(),
                     amount, newBalance, description);
             txDao.create(tx);
+            accountDao.updateBalance(account);
         } catch (Exception ex) {
             throw new IllegalStateException("executeTx: " + ex.getMessage());
         }

@@ -14,4 +14,6 @@ public interface AccountDao {
     List<Account> findByCustomerId(String customerId) throws FinderException;
     
     void remove(Account account);
+    
+    void updateBalance(Account account);
 }

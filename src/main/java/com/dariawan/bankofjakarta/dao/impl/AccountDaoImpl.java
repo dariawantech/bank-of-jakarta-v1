@@ -2,6 +2,7 @@ package com.dariawan.bankofjakarta.dao.impl;
 
 import com.dariawan.bankofjakarta.dao.AccountDao;
 import com.dariawan.bankofjakarta.domain.Account;
+import com.dariawan.bankofjakarta.domain.Customer;
 import com.dariawan.bankofjakarta.exception.db.CreateException;
 import com.dariawan.bankofjakarta.exception.db.FinderException;
 import java.sql.Connection;
@@ -14,6 +15,9 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
 public class AccountDaoImpl implements AccountDao {
 
@@ -31,11 +35,15 @@ public class AccountDaoImpl implements AccountDao {
     
     private static final String SQL_DELETE = "delete from ACCOUNT where account_id = ?";
     
-
+    private static final String SQL_UPDATE_BALANCE = "update ACCOUNT "
+            + "set balance = :balance where account_id = :account_id";
+    
     private JdbcTemplate jdbcTemplate;
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public void setDataSource(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
+        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
 
     public Account create(Account account) throws CreateException {
@@ -73,6 +81,13 @@ public class AccountDaoImpl implements AccountDao {
 
     public void remove(Account account) {
         jdbcTemplate.update(SQL_DELETE, account.getAccountId());
+    }
+    
+    public void updateBalance(Account account) {
+        SqlParameterSource accountParameter = new MapSqlParameterSource()
+                .addValue("balance", account.getBalance())
+                .addValue("customer_id", account.getAccountId());
+        namedParameterJdbcTemplate.update(SQL_UPDATE_BALANCE, accountParameter);
     }
     
     private class ResultSetAccount implements RowMapper<Account> {
