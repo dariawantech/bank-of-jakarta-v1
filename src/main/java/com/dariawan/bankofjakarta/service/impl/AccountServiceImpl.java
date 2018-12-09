@@ -24,7 +24,7 @@ public class AccountServiceImpl implements AccountService {
     private CustomerDao customerDao;
     private NextIdDao nextIdDao;
     private CustomerAccountDao customerAccountDao;
-    
+
     public void setAccountDao(AccountDao accountDao) {
         this.accountDao = accountDao;
     }
@@ -36,7 +36,7 @@ public class AccountServiceImpl implements AccountService {
     public void setNextIdDao(NextIdDao nextIdDao) {
         this.nextIdDao = nextIdDao;
     }
-    
+
     public void setCustomerAccountDao(CustomerAccountDao customerAccountDao) {
         this.customerAccountDao = customerAccountDao;
     }
@@ -47,8 +47,7 @@ public class AccountServiceImpl implements AccountService {
             InvalidParameterException {
         // makes a new account and enters it into db,
         Customer customer = null;
-        
-        // System.out.println("AccountServiceImpl createAccount");
+
         if (account.getType() == null) {
             throw new InvalidParameterException("null type");
         } else if (account.getDescription() == null) {
@@ -69,12 +68,8 @@ public class AccountServiceImpl implements AccountService {
 
         try {
             NextId nextId = nextIdDao.findByPrimaryKey("account");
-            // account = accountDao.create(nextId.getNextId(), details.getType(),
-            //         details.getDescription(), details.getBalance(),
-            //         details.getCreditLine(), details.getBeginBalance(),
-            //         details.getBeginBalanceTimeStamp());
-            
             account.setAccountId(String.valueOf(nextId.getId()));
+            
             account = accountDao.create(account);
             customerAccountDao.add(customer, account);
         } catch (Exception ex) {
@@ -89,17 +84,15 @@ public class AccountServiceImpl implements AccountService {
         // removes account
         Account account = null;
 
-        // System.out.println("AccountServiceImpl removeAccount");
         if (accountId == null) {
             throw new InvalidParameterException("null accountId");
         }
 
         try {
             account = accountDao.findByPrimaryKey(accountId);
-            
+
             customerAccountDao.removeByAccount(account);
             accountDao.remove(account);
-            // account.remove();
         } catch (FinderException ex) {
             throw new AccountNotFoundException();
         } catch (Exception ex) {
@@ -115,7 +108,6 @@ public class AccountServiceImpl implements AccountService {
         Customer customer = null;
         Account account = null;
 
-        // System.out.println("AccountServiceImpl addCustomerToAccount");
         if (customerId == null) {
             throw new InvalidParameterException("null customerId");
         } else if (accountId == null) {
@@ -123,8 +115,6 @@ public class AccountServiceImpl implements AccountService {
         }
 
         try {
-            // System.out.println("AccountServiceImpl Getting the account: "
-            //         + accountId);
             account = accountDao.findByPrimaryKey(accountId);
         } catch (FinderException ex) {
             throw new AccountNotFoundException();
@@ -133,13 +123,8 @@ public class AccountServiceImpl implements AccountService {
         }
 
         try {
-            // System.out.println("AccountServiceImpl Getting the customer: "
-            //         + customerId);
             customer = customerDao.findByPrimaryKey(customerId);
 
-            // System.out.println(
-            //         "AccountServiceImpl Adding the customer to the account.");
-            // account.addCustomer(customer);
             customerAccountDao.add(customer, account);
         } catch (FinderException ex) {
             throw new CustomerNotFoundException();
@@ -162,8 +147,6 @@ public class AccountServiceImpl implements AccountService {
             throw new InvalidParameterException("null accountId");
         }
 
-        // System.out.println("AccountServiceImpl removeCustomerFromAccount");
-
         try {
             account = accountDao.findByPrimaryKey(accountId);
         } catch (FinderException ex) {
@@ -174,7 +157,6 @@ public class AccountServiceImpl implements AccountService {
 
         try {
             customer = customerDao.findByPrimaryKey(customerId);
-            // account.removeCustomer(customer);
             customerAccountDao.removeCustomerFromAccount(customer, account);
         } catch (FinderException ex) {
             throw new CustomerNotFoundException();
@@ -187,9 +169,7 @@ public class AccountServiceImpl implements AccountService {
     public List<Account> getAccountsOfCustomer(String customerId)
             throws InvalidParameterException, CustomerNotFoundException {
         // returns an ArrayList of Account
-        // that correspond to the accounts for the specified
-        // customer
-        // System.out.println("AccountServiceImpl getAccountsOfCustomer");
+        // that correspond to the accounts for the specified customer
 
         List<Account> accounts = null;
         Customer customer = null;
@@ -200,7 +180,6 @@ public class AccountServiceImpl implements AccountService {
 
         try {
             customer = customerDao.findByPrimaryKey(customerId);
-            // accounts = customer.getAccounts();
             accounts = accountDao.findByCustomerId(customer.getCustomerId());
         } catch (FinderException ex) {
             throw new CustomerNotFoundException();
@@ -208,14 +187,11 @@ public class AccountServiceImpl implements AccountService {
             throw new IllegalStateException(ex.getMessage());
         }
 
-        // return copyAccountsToDetails(accounts);
         return accounts;
     }
 
     public ArrayList getCustomerIds(String accountId)
             throws InvalidParameterException, AccountNotFoundException {
-        // System.out.println("AccountServiceImpl getCustomerIds");
-
         List<Customer> customers = null;
         Account account = null;
 
@@ -225,7 +201,6 @@ public class AccountServiceImpl implements AccountService {
 
         try {
             account = accountDao.findByPrimaryKey(accountId);
-            // customers = account.getCustomers();
             customers = customerDao.findByAccountId(account.getAccountId());
         } catch (FinderException ex) {
             throw new AccountNotFoundException();
@@ -238,7 +213,6 @@ public class AccountServiceImpl implements AccountService {
 
     public Account getDetails(String accountId)
             throws InvalidParameterException, AccountNotFoundException {
-        // System.out.println("AccountServiceImpl getDetails");
 
         Account details = null;
         Account account = null;
@@ -261,27 +235,7 @@ public class AccountServiceImpl implements AccountService {
 
         return details;
     }
-
-    // private methods
-    /*
-    private ArrayList copyAccountsToDetails(Collection accounts) {
-        ArrayList detailsList = new ArrayList();
-        Iterator i = accounts.iterator();
-
-        while (i.hasNext()) {
-            Account account = (Account) i.next();
-            Account details
-                    = new Account(account.getAccountId(), account.getType(),
-                            account.getDescription(), account.getBalance(),
-                            account.getCreditLine(), account.getBeginBalance(),
-                            account.getBeginBalanceTimeStamp());
-            detailsList.add(details);
-        }
-
-        return detailsList;
-    }
-    */
-
+    
     private ArrayList copyCustomerIdsToArrayList(Collection customers) {
         ArrayList customerIdList = new ArrayList();
         Iterator i = customers.iterator();

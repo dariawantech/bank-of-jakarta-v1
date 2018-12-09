@@ -38,9 +38,6 @@ public class AccountDaoImpl implements AccountDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    // public Account create(String accountId, String type, String description,
-    //         BigDecimal balance, BigDecimal creditLine,
-    //         BigDecimal beginBalance, Date beginBalanceTimeStamp)
     public Account create(Account account) throws CreateException {
         jdbcTemplate.update(new PreparedStatementCreator() {
 

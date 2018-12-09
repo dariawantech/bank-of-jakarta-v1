@@ -40,9 +40,6 @@ public class CustomerDaoImpl implements CustomerDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    // public Customer create(String customerId, String lastName, String firstName, 
-    //         String middleInitial, String street, String city, String state, 
-    //         String zip, String phone, String email) throws CreateException {
     public Customer create(Customer customer) throws CreateException {
         jdbcTemplate.update(new PreparedStatementCreator() {
             

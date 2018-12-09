@@ -8,9 +8,6 @@ import java.util.List;
 
 public interface TxDao {
 
-    // Tx create(String txId, Account account, Date timeStamp,
-    //         BigDecimal amount, BigDecimal balance, String description)
-    //         throws CreateException;
     Tx create(Tx tx) throws CreateException;
 
     Tx findByPrimaryKey(String txId) throws FinderException;

@@ -18,7 +18,6 @@ public class NextIdDaoImpl implements NextIdDao {
     private static final String SQL_FIND_BY_BEAN_NAME = "select * from NEXT_ID where beanName = ?";
     private static final String SQL_UPDATE_NEXT_ID = "update NEXT_ID set id = :id where beanName = :beanName";
     
-    
     private JdbcTemplate jdbcTemplate;
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 

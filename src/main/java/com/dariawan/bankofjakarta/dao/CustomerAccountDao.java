@@ -2,8 +2,6 @@ package com.dariawan.bankofjakarta.dao;
 
 import com.dariawan.bankofjakarta.domain.Account;
 import com.dariawan.bankofjakarta.domain.Customer;
-import java.util.ArrayList;
-import java.util.List;
 
 public interface CustomerAccountDao {
     

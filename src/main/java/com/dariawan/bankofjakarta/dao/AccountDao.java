@@ -7,10 +7,6 @@ import java.util.List;
 
 public interface AccountDao {
 
-    // Account create(String accountId, String type,
-    //         String description, BigDecimal balance, BigDecimal creditLine,
-    //         BigDecimal beginBalance, Date beginBalanceTimeStamp)
-    //        throws CreateException;
     Account create(Account account) throws CreateException;
     
     Account findByPrimaryKey(String accountId) throws FinderException;

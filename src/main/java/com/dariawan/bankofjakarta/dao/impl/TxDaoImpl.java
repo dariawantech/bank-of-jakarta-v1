@@ -1,7 +1,6 @@
 package com.dariawan.bankofjakarta.dao.impl;
 
 import com.dariawan.bankofjakarta.dao.TxDao;
-import com.dariawan.bankofjakarta.domain.Account;
 import com.dariawan.bankofjakarta.domain.Tx;
 import com.dariawan.bankofjakarta.exception.db.CreateException;
 import com.dariawan.bankofjakarta.exception.db.FinderException;
@@ -10,7 +9,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import javax.sql.DataSource;
@@ -37,9 +35,6 @@ public class TxDaoImpl implements TxDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
     
-    // Tx create(String txId, Account tx, Date timeStamp,
-    //         BigDecimal amount, BigDecimal balance, String description)
-    //         throws CreateException;
     public Tx create(Tx tx) throws CreateException {
         jdbcTemplate.update(new PreparedStatementCreator() {
 

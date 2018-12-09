@@ -7,10 +7,6 @@ import java.util.List;
 
 public interface CustomerDao {
 
-    // Customer create(String customerId, String lastName,
-    //         String firstName, String middleInitial, String street, String city,
-    //         String state, String zip, String phone, String email)
-    //         throws CreateException;
     Customer create(Customer customer) throws CreateException;
         
     Customer findByPrimaryKey(String customerId) throws FinderException;

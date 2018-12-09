@@ -6,7 +6,6 @@ import com.dariawan.bankofjakarta.domain.Customer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -44,6 +43,6 @@ public class CustomerAccountDaoImpl implements CustomerAccountDao {
     }
     
     public void removeCustomerFromAccount(Customer customer, Account account) {
-        jdbcTemplate.update(SQL_DELETE_BY_ACCOUNT_ID, customer.getCustomerId(), account.getAccountId());
+        jdbcTemplate.update(SQL_DELETE_BY_CUSOMER_N_ACCOUNT_ID, customer.getCustomerId(), account.getAccountId());
     }
 }

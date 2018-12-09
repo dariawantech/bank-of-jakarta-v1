@@ -3,7 +3,6 @@ package com.dariawan.bankofjakarta.service;
 import com.dariawan.bankofjakarta.domain.Customer;
 import com.dariawan.bankofjakarta.exception.CustomerNotFoundException;
 import com.dariawan.bankofjakarta.exception.InvalidParameterException;
-import java.util.ArrayList;
 import java.util.List;
 
 public interface CustomerService {

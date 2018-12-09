@@ -18,8 +18,7 @@ public interface TxService {
             throws InvalidParameterException;
 
     // returns an ArrayList of Tx objects
-    // that correspond to the txs for the specified
-    // account
+    // that correspond to the txs for the specified account
     Tx getDetails(String txId)
             throws TxNotFoundException, InvalidParameterException;
 

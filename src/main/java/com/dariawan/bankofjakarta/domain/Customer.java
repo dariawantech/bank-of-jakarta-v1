@@ -21,20 +21,6 @@ public class Customer implements Serializable {
 
     public Customer () {        
     }
-    
-    public Customer(String lastName, String firstName,
-            String middleInitial, String street, String city, String state,
-            String zip, String phone, String email) {
-        this.lastName = lastName;
-        this.firstName = firstName;
-        this.middleInitial = middleInitial;
-        this.street = street;
-        this.city = city;
-        this.state = state;
-        this.zip = zip;
-        this.phone = phone;
-        this.email = email;
-    }
 
     public Customer(String customerId, String lastName,
             String firstName, String middleInitial, String street, String city,

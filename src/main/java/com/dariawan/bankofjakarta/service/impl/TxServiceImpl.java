@@ -24,11 +24,10 @@ public class TxServiceImpl implements TxService {
     private TxDao txDao;
     private AccountDao accountDao;
     private NextIdDao nextIdDao;
-    private BigDecimal bigZero = new BigDecimal("0.00");
+    private final BigDecimal bigZero = new BigDecimal("0.00");
 
     public List<Tx> getTxsOfAccount(Date startDate, Date endDate, String accountId)
             throws InvalidParameterException {
-        // System.out.println("TxControllerBean  getTxsOfAccount");
 
         List<Tx> txList = new ArrayList<>();
 
@@ -50,13 +49,11 @@ public class TxServiceImpl implements TxService {
             return txList;
         }
 
-        // return copyTxsToDetails(txIds);
         return txList;
     } // getTxsOfAccount
 
     public Tx getDetails(String txId)
             throws TxNotFoundException, InvalidParameterException {
-        // System.out.println("TxControllerBean getDetails");
 
         Tx tx;
 
@@ -66,8 +63,6 @@ public class TxServiceImpl implements TxService {
 
         try {
             tx = txDao.findByPrimaryKey(txId);
-            // tx = new Tx(tx.getTxId(), tx.getTimeStamp(),
-            //         tx.getAmount(), tx.getBalance(), tx.getDescription());
         } catch (Exception ex) {
             throw new TxNotFoundException(txId);
         }
@@ -78,7 +73,6 @@ public class TxServiceImpl implements TxService {
     public void withdraw(BigDecimal amount, String description, String accountId)
             throws InvalidParameterException, AccountNotFoundException,
             IllegalAccountTypeException, InsufficientFundsException {
-        // System.out.println("TxControllerBean withdraw");
 
         Account account = checkAccountArgs(amount, description, accountId);
 
@@ -88,8 +82,7 @@ public class TxServiceImpl implements TxService {
             throw new IllegalAccountTypeException(type);
         }
 
-        BigDecimal newBalance = account.getBalance()
-                .subtract(amount);
+        BigDecimal newBalance = account.getBalance().subtract(amount);
 
         if (newBalance.compareTo(bigZero) == -1) {
             throw new InsufficientFundsException();
@@ -101,7 +94,6 @@ public class TxServiceImpl implements TxService {
     public void deposit(BigDecimal amount, String description, String accountId)
             throws InvalidParameterException, AccountNotFoundException,
             IllegalAccountTypeException {
-        // System.out.println("TxControllerBean deposit");
 
         Account account = checkAccountArgs(amount, description, accountId);
 
@@ -111,8 +103,7 @@ public class TxServiceImpl implements TxService {
             throw new IllegalAccountTypeException(type);
         }
 
-        BigDecimal newBalance = account.getBalance()
-                .add(amount);
+        BigDecimal newBalance = account.getBalance().add(amount);
         executeTx(amount, description, newBalance, account);
     }
 
@@ -120,7 +111,6 @@ public class TxServiceImpl implements TxService {
             String accountId)
             throws InvalidParameterException, AccountNotFoundException,
             IllegalAccountTypeException, InsufficientCreditException {
-        // System.out.println("TxControllerBean charge");
 
         Account account = checkAccountArgs(amount, description, accountId);
 
@@ -130,8 +120,7 @@ public class TxServiceImpl implements TxService {
             throw new IllegalAccountTypeException(type);
         }
 
-        BigDecimal newBalance = account.getBalance()
-                .add(amount);
+        BigDecimal newBalance = account.getBalance().add(amount);
 
         if (newBalance.compareTo(account.getCreditLine()) == 1) {
             throw new InsufficientCreditException();
@@ -140,11 +129,9 @@ public class TxServiceImpl implements TxService {
         executeTx(amount, description, newBalance, account);
     }
 
-    public void makePayment(BigDecimal amount, String description,
-            String accountId)
+    public void makePayment(BigDecimal amount, String description, String accountId)
             throws InvalidParameterException, AccountNotFoundException,
             IllegalAccountTypeException {
-        // System.out.println("TxControllerBean makePayment");
 
         Account account = checkAccountArgs(amount, description, accountId);
 
@@ -154,8 +141,7 @@ public class TxServiceImpl implements TxService {
             throw new IllegalAccountTypeException(type);
         }
 
-        BigDecimal newBalance = account.getBalance()
-                .subtract(amount);
+        BigDecimal newBalance = account.getBalance().subtract(amount);
         executeTx(amount, description, newBalance, account);
     }
 
@@ -202,7 +188,6 @@ public class TxServiceImpl implements TxService {
     // private methods
     private void executeTx(BigDecimal amount, String description,
             BigDecimal newBalance, Account account) {
-        // System.out.println("TxControllerBean executeTx");
 
         Tx tx = null;
         NextId nextId = null;
@@ -211,9 +196,7 @@ public class TxServiceImpl implements TxService {
         try {
             account.setBalance(newBalance);
             nextId = nextIdDao.findByPrimaryKey("tx");
-            // tx = txDao.create(nextId.getId(), account,
-            //         new java.util.Date(), amount, newBalance, description);
-            tx = new Tx(String.valueOf(nextId.getId()), account.getAccountId(), new Date(), 
+            tx = new Tx(String.valueOf(nextId.getId()), account.getAccountId(), new Date(),
                     amount, newBalance, description);
             txDao.create(tx);
         } catch (Exception ex) {
@@ -246,25 +229,4 @@ public class TxServiceImpl implements TxService {
 
         return account;
     } // checkAccountArgs
-
-    /*
-    private ArrayList copyTxsToDetails(Collection txs) {
-        ArrayList detailsList = new ArrayList();
-        Iterator i = txs.iterator();
-
-        try {
-            while (i.hasNext()) {
-                Tx tx = (Tx) i.next();
-                Tx Tx
-                        = new Tx(tx.getTxId(), tx.getTimeStamp(),
-                                tx.getAmount(), tx.getBalance(), tx.getDescription());
-                detailsList.add(Tx);
-            }
-        } catch (Exception ex) {
-            throw new IllegalStateException(ex.getMessage());
-        }
-
-        return detailsList;
-    }
-    */
 }

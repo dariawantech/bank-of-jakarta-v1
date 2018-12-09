@@ -33,18 +33,6 @@ public class Account implements Serializable {
         this.beginBalanceTimeStamp = beginBalanceTimeStamp;
     }
 
-    public Account(String type, String description, BigDecimal balance,
-            BigDecimal creditLine, BigDecimal beginBalance,
-            Date beginBalanceTimeStamp) {
-        // this.accountId = accountId;
-        this.type = type;
-        this.description = description;
-        this.balance = balance;
-        this.creditLine = creditLine;
-        this.beginBalance = beginBalance;
-        this.beginBalanceTimeStamp = beginBalanceTimeStamp;
-    }
-
     // getters
     public String getAccountId() {
         return accountId;
