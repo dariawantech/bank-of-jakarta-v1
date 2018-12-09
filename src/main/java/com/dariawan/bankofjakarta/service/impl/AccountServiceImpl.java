@@ -1,0 +1,296 @@
+package com.dariawan.bankofjakarta.service.impl;
+
+import com.dariawan.bankofjakarta.dao.AccountDao;
+import com.dariawan.bankofjakarta.dao.CustomerAccountDao;
+import com.dariawan.bankofjakarta.dao.CustomerDao;
+import com.dariawan.bankofjakarta.dao.NextIdDao;
+import com.dariawan.bankofjakarta.domain.Account;
+import com.dariawan.bankofjakarta.domain.Customer;
+import com.dariawan.bankofjakarta.domain.NextId;
+import com.dariawan.bankofjakarta.exception.AccountNotFoundException;
+import com.dariawan.bankofjakarta.exception.CustomerNotFoundException;
+import com.dariawan.bankofjakarta.exception.IllegalAccountTypeException;
+import com.dariawan.bankofjakarta.exception.InvalidParameterException;
+import com.dariawan.bankofjakarta.exception.db.FinderException;
+import com.dariawan.bankofjakarta.service.AccountService;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+
+public class AccountServiceImpl implements AccountService {
+
+    private AccountDao accountDao;
+    private CustomerDao customerDao;
+    private NextIdDao nextIdDao;
+    private CustomerAccountDao customerAccountDao;
+    
+    public void setAccountDao(AccountDao accountDao) {
+        this.accountDao = accountDao;
+    }
+
+    public void setCustomerDao(CustomerDao customerDao) {
+        this.customerDao = customerDao;
+    }
+
+    public void setNextIdDao(NextIdDao nextIdDao) {
+        this.nextIdDao = nextIdDao;
+    }
+    
+    public void setCustomerAccountDao(CustomerAccountDao customerAccountDao) {
+        this.customerAccountDao = customerAccountDao;
+    }
+
+    // account creation and removal methods
+    public String createAccount(Account account, String customerId)
+            throws IllegalAccountTypeException, CustomerNotFoundException,
+            InvalidParameterException {
+        // makes a new account and enters it into db,
+        Customer customer = null;
+        
+        // System.out.println("AccountServiceImpl createAccount");
+        if (account.getType() == null) {
+            throw new InvalidParameterException("null type");
+        } else if (account.getDescription() == null) {
+            throw new InvalidParameterException("null description");
+        } else if (account.getBeginBalanceTimeStamp() == null) {
+            throw new InvalidParameterException("null beginBalanceTimeStamp");
+        } else if (customerId == null) {
+            throw new InvalidParameterException("null customerId");
+        }
+
+        try {
+            customer = customerDao.findByPrimaryKey(customerId);
+        } catch (FinderException ex) {
+            throw new CustomerNotFoundException();
+        } catch (Exception ex) {
+            throw new IllegalStateException(ex.getMessage());
+        }
+
+        try {
+            NextId nextId = nextIdDao.findByPrimaryKey("account");
+            // account = accountDao.create(nextId.getNextId(), details.getType(),
+            //         details.getDescription(), details.getBalance(),
+            //         details.getCreditLine(), details.getBeginBalance(),
+            //         details.getBeginBalanceTimeStamp());
+            
+            account.setAccountId(String.valueOf(nextId.getId()));
+            account = accountDao.create(account);
+            customerAccountDao.add(customer, account);
+        } catch (Exception ex) {
+            throw new IllegalStateException(ex.getMessage());
+        }
+
+        return account.getAccountId();
+    }
+
+    public void removeAccount(String accountId)
+            throws InvalidParameterException, AccountNotFoundException {
+        // removes account
+        Account account = null;
+
+        // System.out.println("AccountServiceImpl removeAccount");
+        if (accountId == null) {
+            throw new InvalidParameterException("null accountId");
+        }
+
+        try {
+            account = accountDao.findByPrimaryKey(accountId);
+            
+            customerAccountDao.removeByAccount(account);
+            accountDao.remove(account);
+            // account.remove();
+        } catch (FinderException ex) {
+            throw new AccountNotFoundException();
+        } catch (Exception ex) {
+            throw new IllegalStateException(ex.getMessage());
+        }
+    }
+
+    // customer-account relationship methods
+    public void addCustomerToAccount(String customerId, String accountId)
+            throws InvalidParameterException, CustomerNotFoundException,
+            AccountNotFoundException {
+        // adds another customer to the account
+        Customer customer = null;
+        Account account = null;
+
+        // System.out.println("AccountServiceImpl addCustomerToAccount");
+        if (customerId == null) {
+            throw new InvalidParameterException("null customerId");
+        } else if (accountId == null) {
+            throw new InvalidParameterException("null accountId");
+        }
+
+        try {
+            // System.out.println("AccountServiceImpl Getting the account: "
+            //         + accountId);
+            account = accountDao.findByPrimaryKey(accountId);
+        } catch (FinderException ex) {
+            throw new AccountNotFoundException();
+        } catch (Exception ex) {
+            throw new IllegalStateException(ex.getMessage());
+        }
+
+        try {
+            // System.out.println("AccountServiceImpl Getting the customer: "
+            //         + customerId);
+            customer = customerDao.findByPrimaryKey(customerId);
+
+            // System.out.println(
+            //         "AccountServiceImpl Adding the customer to the account.");
+            // account.addCustomer(customer);
+            customerAccountDao.add(customer, account);
+        } catch (FinderException ex) {
+            throw new CustomerNotFoundException();
+        } catch (Exception ex) {
+            throw new IllegalStateException(ex.getMessage());
+        }
+    }
+
+    public void removeCustomerFromAccount(String customerId, String accountId)
+            throws InvalidParameterException, CustomerNotFoundException,
+            AccountNotFoundException {
+        // removes a customer from this account, but
+        // the customer is not removed from the db
+        Account account = null;
+        Customer customer = null;
+
+        if (customerId == null) {
+            throw new InvalidParameterException("null customerId");
+        } else if (accountId == null) {
+            throw new InvalidParameterException("null accountId");
+        }
+
+        // System.out.println("AccountServiceImpl removeCustomerFromAccount");
+
+        try {
+            account = accountDao.findByPrimaryKey(accountId);
+        } catch (FinderException ex) {
+            throw new AccountNotFoundException();
+        } catch (Exception ex) {
+            throw new IllegalStateException(ex.getMessage());
+        }
+
+        try {
+            customer = customerDao.findByPrimaryKey(customerId);
+            // account.removeCustomer(customer);
+            customerAccountDao.removeCustomerFromAccount(customer, account);
+        } catch (FinderException ex) {
+            throw new CustomerNotFoundException();
+        } catch (Exception ex) {
+            throw new IllegalStateException(ex.getMessage());
+        }
+    }
+
+    // getters
+    public List<Account> getAccountsOfCustomer(String customerId)
+            throws InvalidParameterException, CustomerNotFoundException {
+        // returns an ArrayList of Account
+        // that correspond to the accounts for the specified
+        // customer
+        // System.out.println("AccountServiceImpl getAccountsOfCustomer");
+
+        List<Account> accounts = null;
+        Customer customer = null;
+
+        if (customerId == null) {
+            throw new InvalidParameterException("null customerId");
+        }
+
+        try {
+            customer = customerDao.findByPrimaryKey(customerId);
+            // accounts = customer.getAccounts();
+            accounts = accountDao.findByCustomerId(customer.getCustomerId());
+        } catch (FinderException ex) {
+            throw new CustomerNotFoundException();
+        } catch (Exception ex) {
+            throw new IllegalStateException(ex.getMessage());
+        }
+
+        // return copyAccountsToDetails(accounts);
+        return accounts;
+    }
+
+    public ArrayList getCustomerIds(String accountId)
+            throws InvalidParameterException, AccountNotFoundException {
+        // System.out.println("AccountServiceImpl getCustomerIds");
+
+        List<Customer> customers = null;
+        Account account = null;
+
+        if (accountId == null) {
+            throw new InvalidParameterException("null accountId");
+        }
+
+        try {
+            account = accountDao.findByPrimaryKey(accountId);
+            // customers = account.getCustomers();
+            customers = customerDao.findByAccountId(account.getAccountId());
+        } catch (FinderException ex) {
+            throw new AccountNotFoundException();
+        } catch (Exception ex) {
+            throw new IllegalStateException(ex.getMessage());
+        }
+
+        return copyCustomerIdsToArrayList(customers);
+    }
+
+    public Account getDetails(String accountId)
+            throws InvalidParameterException, AccountNotFoundException {
+        // System.out.println("AccountServiceImpl getDetails");
+
+        Account details = null;
+        Account account = null;
+
+        if (accountId == null) {
+            throw new InvalidParameterException("null accountId");
+        }
+
+        try {
+            account = accountDao.findByPrimaryKey(accountId);
+            details = new Account(accountId, account.getType(),
+                    account.getDescription(), account.getBalance(),
+                    account.getCreditLine(), account.getBeginBalance(),
+                    account.getBeginBalanceTimeStamp());
+        } catch (FinderException ex) {
+            throw new AccountNotFoundException();
+        } catch (Exception ex) {
+            throw new IllegalStateException(ex.getMessage());
+        }
+
+        return details;
+    }
+
+    // private methods
+    /*
+    private ArrayList copyAccountsToDetails(Collection accounts) {
+        ArrayList detailsList = new ArrayList();
+        Iterator i = accounts.iterator();
+
+        while (i.hasNext()) {
+            Account account = (Account) i.next();
+            Account details
+                    = new Account(account.getAccountId(), account.getType(),
+                            account.getDescription(), account.getBalance(),
+                            account.getCreditLine(), account.getBeginBalance(),
+                            account.getBeginBalanceTimeStamp());
+            detailsList.add(details);
+        }
+
+        return detailsList;
+    }
+    */
+
+    private ArrayList copyCustomerIdsToArrayList(Collection customers) {
+        ArrayList customerIdList = new ArrayList();
+        Iterator i = customers.iterator();
+
+        while (i.hasNext()) {
+            Customer customer = (Customer) i.next();
+            customerIdList.add(customer.getCustomerId());
+        }
+
+        return customerIdList;
+    }
+}
