@@ -214,7 +214,6 @@ public class AccountServiceImpl implements AccountService {
     public Account getDetails(String accountId)
             throws InvalidParameterException, AccountNotFoundException {
 
-        Account details = null;
         Account account = null;
 
         if (accountId == null) {
@@ -223,17 +222,13 @@ public class AccountServiceImpl implements AccountService {
 
         try {
             account = accountDao.findByPrimaryKey(accountId);
-            details = new Account(accountId, account.getType(),
-                    account.getDescription(), account.getBalance(),
-                    account.getCreditLine(), account.getBeginBalance(),
-                    account.getBeginBalanceTimeStamp());
         } catch (FinderException ex) {
             throw new AccountNotFoundException();
         } catch (Exception ex) {
             throw new IllegalStateException(ex.getMessage());
         }
 
-        return details;
+        return account;
     }
     
     private ArrayList copyCustomerIdsToArrayList(Collection customers) {

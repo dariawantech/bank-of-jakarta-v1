@@ -107,8 +107,7 @@ public class TxServiceImpl implements TxService {
         executeTx(amount, description, newBalance, account);
     }
 
-    public void makeCharge(BigDecimal amount, String description,
-            String accountId)
+    public void makeCharge(BigDecimal amount, String description, String accountId)
             throws InvalidParameterException, AccountNotFoundException,
             IllegalAccountTypeException, InsufficientCreditException {
 
@@ -189,14 +188,11 @@ public class TxServiceImpl implements TxService {
     private void executeTx(BigDecimal amount, String description,
             BigDecimal newBalance, Account account) {
 
-        Tx tx = null;
-        NextId nextId = null;
-
         // Set the new balance and create a new transaction       
         try {
             account.setBalance(newBalance);
-            nextId = nextIdDao.findByPrimaryKey("tx");
-            tx = new Tx(String.valueOf(nextId.getId()), account.getAccountId(), new Date(),
+            NextId nextId = nextIdDao.findByPrimaryKey("tx");
+            Tx tx = new Tx(String.valueOf(nextId.getId()), account.getAccountId(), new Date(),
                     amount, newBalance, description);
             txDao.create(tx);
         } catch (Exception ex) {

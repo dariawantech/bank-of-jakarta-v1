@@ -14,35 +14,49 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
 public class CustomerDaoImpl implements CustomerDao {
-    
+
     private static final String SQL_INSERT = "insert into CUSTOMER ("
             + "customer_id, last_name, first_name, middle_initial, "
             + "street, city, state, zip, phone, email) "
             + "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    
+
     private static final String SQL_FIND_BY_CUSTOMER_ID = "select * from CUSTOMER where customer_id = ?";
 
     private static final String SQL_FIND_BY_ACCOUNT_ID = "select cus.* "
             + "from CUSTOMER_ACCOUNT_XREF cax "
             + "inner join CUSTOMER cus on cus.customer_id = cax.customer_id "
             + "where cax.account_id = ?";
-    
+
     private static final String SQL_FIND_BY_LAST_NAME = "select * "
             + "from CUSTOMER where last_name = ?";
-    
+
     private static final String SQL_DELETE = "delete from CUSTOMER where customer_id = ?";
-    
+
+    private static final String SQL_UPDATE_NAME = "update CUSTOMER "
+            + "set last_name = :last_name, first_name = :first_name, middle_initial = :middle_initial "
+            + "where customer_id = :customer_id";
+
+    private static final String SQL_UPDATE_CONTACT = "update CUSTOMER "
+            + "set street = :street, city = :city, state = :state, zip = :zip, "
+            + "phone = :phone, email = :email "
+            + "where customer_id = :customer_id";
+
     private JdbcTemplate jdbcTemplate;
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public void setDataSource(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
+        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
 
     public Customer create(Customer customer) throws CreateException {
         jdbcTemplate.update(new PreparedStatementCreator() {
-            
+
             @Override
             public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
                 PreparedStatement ps = conn.prepareStatement(SQL_INSERT);
@@ -80,13 +94,34 @@ public class CustomerDaoImpl implements CustomerDao {
         List<Customer> result = jdbcTemplate.query(SQL_FIND_BY_LAST_NAME, new ResultSetCustomer(), lastName);
         return result;
     }
-    
+
     public void remove(Customer customer) {
         jdbcTemplate.update(SQL_DELETE, customer.getCustomerId());
     }
-    
+
+    public void updateName(Customer customer) {
+        SqlParameterSource customerParameter = new MapSqlParameterSource()
+                .addValue("last_name", customer.getLastName())
+                .addValue("first_name", customer.getFirstName())
+                .addValue("middle_initial", customer.getMiddleInitial())
+                .addValue("customer_id", customer.getCustomerId());
+        namedParameterJdbcTemplate.update(SQL_UPDATE_NAME, customerParameter);
+    }
+
+    public void updateContact(Customer customer) {
+        SqlParameterSource customerParameter = new MapSqlParameterSource()
+                .addValue("street", customer.getStreet())
+                .addValue("city", customer.getCity())
+                .addValue("state", customer.getState())
+                .addValue("zip", customer.getZip())
+                .addValue("phone", customer.getPhone())
+                .addValue("email", customer.getEmail())
+                .addValue("customer_id", customer.getCustomerId());
+        namedParameterJdbcTemplate.update(SQL_UPDATE_CONTACT, customerParameter);
+    }
+
     private class ResultSetCustomer implements RowMapper<Customer> {
-            
+
         @Override
         public Customer mapRow(ResultSet rs, int i) throws SQLException {
             Customer customer = new Customer();

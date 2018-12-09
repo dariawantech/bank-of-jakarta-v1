@@ -148,6 +148,7 @@ public class CustomerServiceImpl implements CustomerService {
             customer.setLastName(lastName);
             customer.setFirstName(firstName);
             customer.setMiddleInitial(middleInitial);
+            customerDao.updateName(customer);
         } catch (Exception ex) {
             throw new IllegalStateException("setName: " + ex.getMessage());
         }
@@ -181,6 +182,7 @@ public class CustomerServiceImpl implements CustomerService {
             customer.setZip(zip);
             customer.setPhone(phone);
             customer.setEmail(email);
+            customerDao.updateContact(customer);
         } catch (Exception ex) {
             throw new IllegalStateException("setAddress: " + ex.getMessage());
         }
