@@ -8,7 +8,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath*:com/dariawan/bankofjakarta/spring-cfg.xml")
+@ContextConfiguration("classpath*:com/dariawan/bankofjakarta/**/spring-config-test.xml")
 public class AccountServiceImplJdbcTest extends AccountServiceTest {
 
     @Autowired private AccountService accountService;
@@ -16,6 +16,5 @@ public class AccountServiceImplJdbcTest extends AccountServiceTest {
     @Override
     public AccountService getAccountService() {
         return accountService;
-    }
-    
+    }    
 }

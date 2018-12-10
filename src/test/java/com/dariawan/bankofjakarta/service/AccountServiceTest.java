@@ -3,6 +3,7 @@ package com.dariawan.bankofjakarta.service;
 import com.dariawan.bankofjakarta.domain.Account;
 import com.dariawan.bankofjakarta.exception.AccountNotFoundException;
 import com.dariawan.bankofjakarta.exception.InvalidParameterException;
+import com.dariawan.bankofjakarta.service.AccountService;
 import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 
@@ -10,7 +11,7 @@ public abstract class AccountServiceTest {
     public abstract AccountService getAccountService();
     
     @Test
-    public void testCariPenjualanById() throws InvalidParameterException, AccountNotFoundException{
+    public void testGetDetails() throws InvalidParameterException, AccountNotFoundException {
         Account acc = getAccountService().getDetails("5008");
         verifyAccount(acc);
     }
