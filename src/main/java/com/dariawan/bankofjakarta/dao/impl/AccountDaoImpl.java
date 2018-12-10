@@ -2,7 +2,6 @@ package com.dariawan.bankofjakarta.dao.impl;
 
 import com.dariawan.bankofjakarta.dao.AccountDao;
 import com.dariawan.bankofjakarta.domain.Account;
-import com.dariawan.bankofjakarta.domain.Customer;
 import com.dariawan.bankofjakarta.exception.db.CreateException;
 import com.dariawan.bankofjakarta.exception.db.FinderException;
 import java.sql.Connection;
@@ -46,6 +45,13 @@ public class AccountDaoImpl implements AccountDao {
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
 
+    public AccountDaoImpl() {        
+    }
+    
+    public AccountDaoImpl(DataSource dataSource) {
+        setDataSource(dataSource);
+    }
+    
     public Account create(Account account) throws CreateException {
         jdbcTemplate.update(new PreparedStatementCreator() {
 

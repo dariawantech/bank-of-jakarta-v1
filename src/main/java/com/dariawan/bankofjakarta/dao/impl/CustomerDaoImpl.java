@@ -54,6 +54,13 @@ public class CustomerDaoImpl implements CustomerDao {
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
 
+    public CustomerDaoImpl() {        
+    }
+    
+    public CustomerDaoImpl(DataSource dataSource) {
+        setDataSource(dataSource);
+    }
+    
     public Customer create(Customer customer) throws CreateException {
         jdbcTemplate.update(new PreparedStatementCreator() {
 

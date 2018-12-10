@@ -41,6 +41,17 @@ public class AccountServiceImpl implements AccountService {
         this.customerAccountDao = customerAccountDao;
     }
 
+    public AccountServiceImpl() {        
+    }
+    
+    public AccountServiceImpl(AccountDao accountDao, CustomerDao customerDao, 
+            NextIdDao nextIdDao, CustomerAccountDao customerAccountDao) {
+        this.accountDao = accountDao;
+        this.customerDao = customerDao;
+        this.nextIdDao = nextIdDao;
+        this.customerAccountDao = customerAccountDao;
+    }
+    
     // account creation and removal methods
     public String createAccount(Account account, String customerId)
             throws IllegalAccountTypeException, CustomerNotFoundException,

@@ -18,6 +18,28 @@ public class CustomerServiceImpl implements CustomerService {
     private AccountDao accountDao;
     private NextIdDao nextIdDao;
 
+    public void setCustomerDao(CustomerDao customerDao) {
+        this.customerDao = customerDao;
+    }
+
+    public void setAccountDao(AccountDao accountDao) {
+        this.accountDao = accountDao;
+    }
+
+    public void setNextIdDao(NextIdDao nextIdDao) {
+        this.nextIdDao = nextIdDao;
+    }
+    
+    public CustomerServiceImpl() {        
+    }
+    
+    public CustomerServiceImpl(CustomerDao customerDao, AccountDao accountDao, 
+            NextIdDao nextIdDao) {
+        this.customerDao = customerDao;
+        this.accountDao = accountDao;
+        this.nextIdDao = nextIdDao;
+    }
+    
     // customer creation and removal methods
     public String createCustomer(Customer customer)
         throws InvalidParameterException {
@@ -203,5 +225,5 @@ public class CustomerServiceImpl implements CustomerService {
         }
 
         return customer==null;
-    }    
+    }
 } // CustomerServiceImpl

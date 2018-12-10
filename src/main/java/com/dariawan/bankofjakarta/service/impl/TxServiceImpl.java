@@ -21,11 +21,33 @@ import java.util.List;
 
 public class TxServiceImpl implements TxService {
 
+    private final BigDecimal bigZero = new BigDecimal("0.00");
+
     private TxDao txDao;
     private AccountDao accountDao;
     private NextIdDao nextIdDao;
-    private final BigDecimal bigZero = new BigDecimal("0.00");
+    
+    public void setTxDao(TxDao txDao) {
+        this.txDao = txDao;
+    }
 
+    public void setAccountDao(AccountDao accountDao) {
+        this.accountDao = accountDao;
+    }
+
+    public void setNextIdDao(NextIdDao nextIdDao) {
+        this.nextIdDao = nextIdDao;
+    }
+    
+    public TxServiceImpl() {        
+    }
+    
+    public TxServiceImpl(TxDao txDao, AccountDao accountDao, NextIdDao nextIdDao) {
+        this.txDao = txDao;
+        this.accountDao = accountDao;
+        this.nextIdDao = nextIdDao;
+    }
+    
     public List<Tx> getTxsOfAccount(Date startDate, Date endDate, String accountId)
             throws InvalidParameterException {
 

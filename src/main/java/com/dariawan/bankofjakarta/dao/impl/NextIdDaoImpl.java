@@ -26,6 +26,13 @@ public class NextIdDaoImpl implements NextIdDao {
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
     
+    public NextIdDaoImpl() {        
+    }
+    
+    public NextIdDaoImpl(DataSource dataSource) {
+        setDataSource(dataSource);
+    }
+    
     public NextId findByPrimaryKey(String beanName) throws FinderException {
         try {
             NextId nextId = jdbcTemplate.queryForObject(SQL_FIND_BY_BEAN_NAME, new ResultSetNextId(), beanName);

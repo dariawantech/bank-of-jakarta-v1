@@ -25,6 +25,13 @@ public class CustomerAccountDaoImpl implements CustomerAccountDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
     
+    public CustomerAccountDaoImpl() {        
+    }
+    
+    public CustomerAccountDaoImpl(DataSource dataSource) {
+        setDataSource(dataSource);
+    }
+    
     public void add(Customer customer, Account account) {
         jdbcTemplate.update(new PreparedStatementCreator() {
 

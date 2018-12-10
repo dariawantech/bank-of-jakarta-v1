@@ -35,6 +35,13 @@ public class TxDaoImpl implements TxDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
     
+    public TxDaoImpl() {        
+    }
+    
+    public TxDaoImpl(DataSource dataSource) {
+        setDataSource(dataSource);
+    }
+    
     public Tx create(Tx tx) throws CreateException {
         jdbcTemplate.update(new PreparedStatementCreator() {
 
