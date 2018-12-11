@@ -92,7 +92,7 @@ public class AccountDaoImpl implements AccountDao {
     public void updateBalance(Account account) {
         SqlParameterSource accountParameter = new MapSqlParameterSource()
                 .addValue("balance", account.getBalance())
-                .addValue("customer_id", account.getAccountId());
+                .addValue("account_id", account.getAccountId());
         namedParameterJdbcTemplate.update(SQL_UPDATE_BALANCE, accountParameter);
     }
     

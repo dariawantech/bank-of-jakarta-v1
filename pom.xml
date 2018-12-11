@@ -21,6 +21,7 @@
         <joda-time.version>2.10.1</joda-time.version>
         <commons-dbcp2.version>2.5.0</commons-dbcp2.version>
         <postgresql.version>42.2.5</postgresql.version>
+        <aspectjweaver.version>1.8.9</aspectjweaver.version>
         <org.springframework.version>4.3.21.RELEASE</org.springframework.version>
     </properties>
 
@@ -83,6 +84,12 @@
             <version>${commons-dbcp2.version}</version>
         </dependency>
         
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>${aspectjweaver.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>

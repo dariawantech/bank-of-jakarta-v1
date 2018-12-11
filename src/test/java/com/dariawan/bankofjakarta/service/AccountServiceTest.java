@@ -3,11 +3,16 @@ package com.dariawan.bankofjakarta.service;
 import com.dariawan.bankofjakarta.domain.Account;
 import com.dariawan.bankofjakarta.exception.AccountNotFoundException;
 import com.dariawan.bankofjakarta.exception.InvalidParameterException;
-import com.dariawan.bankofjakarta.service.AccountService;
 import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
+import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 
-public abstract class AccountServiceTest {
+/**
+ * 
+ * abstract class AccountServiceTest
+ * extends AbstractTransactionalJUnit4SpringContextTests for transaction rollback
+ */
+public abstract class AccountServiceTest extends AbstractTransactionalJUnit4SpringContextTests {
     public abstract AccountService getAccountService();
     
     @Test

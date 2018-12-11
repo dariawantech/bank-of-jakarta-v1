@@ -2,6 +2,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xsi:schemaLocation="
         http://www.springframework.org/schema/beans 
@@ -9,7 +10,9 @@
         http://www.springframework.org/schema/tx 
         http://www.springframework.org/schema/tx/spring-tx.xsd
         http://www.springframework.org/schema/context 
-        http://www.springframework.org/schema/context/spring-context.xsd">
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource">
         <property name="driverClassName" value="org.postgresql.Driver" />
@@ -63,4 +66,26 @@
         <constructor-arg ref="accountDao" />
         <constructor-arg ref="nextIdDao" />        
     </bean>
+    
+    <!-- the transactional advice (what 'happens'; see the <aop:advisor/> bean below) -->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <!-- the transactional semantics... -->
+        <tx:attributes>
+            <tx:method name="add*" propagation="REQUIRED" />
+	    <tx:method name="create*" propagation="REQUIRED" />
+	    <tx:method name="remove*" propagation="REQUIRED" />
+            <tx:method name="set*" propagation="REQUIRED" />
+            <!-- tx -->
+            <tx:method name="deposit" propagation="REQUIRED" />
+            <tx:method name="make*" propagation="REQUIRED" />
+            <tx:method name="transferFunds" propagation="REQUIRED" />
+            <tx:method name="withdraw" propagation="REQUIRED" />
+            <!-- all methods starting with 'get' are read-only -->
+            <tx:method name="get*" read-only="true"/>
+        </tx:attributes>
+    </tx:advice>
+    
+    <aop:config>
+        <aop:advisor pointcut="execution(* *..*Service.*(..))" advice-ref="txAdvice" />	
+    </aop:config>
 </beans>
