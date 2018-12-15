@@ -1,9 +1,14 @@
 package com.dariawan.bankofjakarta;
 
+import com.dariawan.bankofjakarta.dao.TxDao;
 import com.dariawan.bankofjakarta.domain.Account;
 import com.dariawan.bankofjakarta.exception.AccountNotFoundException;
+import com.dariawan.bankofjakarta.exception.IllegalAccountTypeException;
+import com.dariawan.bankofjakarta.exception.InsufficientFundsException;
 import com.dariawan.bankofjakarta.exception.InvalidParameterException;
 import com.dariawan.bankofjakarta.service.AccountService;
+import com.dariawan.bankofjakarta.service.TxService;
+import java.math.BigDecimal;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.context.ApplicationContext;
@@ -12,7 +17,32 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class SpringTestApp {
 
     public static void main(String[] args) {
+        // Create the application from the configuration
         ApplicationContext appContext = new ClassPathXmlApplicationContext("com/dariawan/bankofjakarta/spring-config.xml");
+
+        /* Accessing service */
+        // Classic way: cast is needed
+        TxService ts1 = (TxService) appContext.getBean("txService");
+        // Since Spring 3.0: no more cast, type is a method param
+        TxService ts2 = appContext.getBean("txService", TxService.class);
+        // New in Spring 3.0: No need for bean id if type is unique
+        TxService ts3 = appContext.getBean(TxService.class );
+
+        /* Accessing Dao */
+        // Classic way: cast is needed
+        TxDao td1 = (TxDao) appContext.getBean("txDao");
+        // Use typed method to avoid cast
+        TxDao td2 = appContext.getBean("txDao", TxDao.class);
+        // No need for bean id if type is unique
+        TxDao td3 = appContext.getBean(TxDao.class );
+        
+        assert ts1!=null;
+        assert ts2!=null;
+        assert ts3!=null;
+
+        assert td1!=null;
+        assert td2!=null;
+        assert td3!=null;
 
         AccountService accountService = appContext.getBean("accountService", AccountService.class);
         try {
@@ -22,6 +52,16 @@ public class SpringTestApp {
         } catch (AccountNotFoundException ex) {
             Logger.getLogger(SpringTestApp.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
+        // Look up the application service interface
+        /*
+        TxService txService = appContext.getBean("txService", TxService.class);
+        try {
+            // Use the service
+            txService.withdraw(new BigDecimal("100"), "Withdraw 100$", "5008");
+        } catch (InvalidParameterException | AccountNotFoundException | IllegalAccountTypeException | InsufficientFundsException ex) {
+            System.out.println("Exception: " + ex.getMessage());
+        }
+        */
     }
 }
