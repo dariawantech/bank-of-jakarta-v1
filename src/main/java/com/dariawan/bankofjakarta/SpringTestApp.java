@@ -1,6 +1,11 @@
 package com.dariawan.bankofjakarta;
 
+import com.dariawan.bankofjakarta.dao.AccountDao;
+import com.dariawan.bankofjakarta.dao.NextIdDao;
 import com.dariawan.bankofjakarta.dao.TxDao;
+import com.dariawan.bankofjakarta.dao.impl.AccountDaoImpl;
+import com.dariawan.bankofjakarta.dao.impl.NextIdDaoImpl;
+import com.dariawan.bankofjakarta.dao.impl.TxDaoImpl;
 import com.dariawan.bankofjakarta.domain.Account;
 import com.dariawan.bankofjakarta.exception.AccountNotFoundException;
 import com.dariawan.bankofjakarta.exception.IllegalAccountTypeException;
@@ -8,6 +13,7 @@ import com.dariawan.bankofjakarta.exception.InsufficientFundsException;
 import com.dariawan.bankofjakarta.exception.InvalidParameterException;
 import com.dariawan.bankofjakarta.service.AccountService;
 import com.dariawan.bankofjakarta.service.TxService;
+import com.dariawan.bankofjakarta.service.impl.TxServiceImpl;
 import java.math.BigDecimal;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,7 +22,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class SpringTestApp {
 
-    public static void main(String[] args) {
+    void testBeanConfiguration() {
         // Create the application from the configuration
         ApplicationContext appContext = new ClassPathXmlApplicationContext("com/dariawan/bankofjakarta/spring-config.xml");
 
@@ -42,7 +48,61 @@ public class SpringTestApp {
 
         assert td1!=null;
         assert td2!=null;
-        assert td3!=null;
+        assert td3!=null;        
+    }
+    
+    void testBeanConstructor() {
+        // Create the application from the configuration
+        ApplicationContext appContext = new ClassPathXmlApplicationContext("com/dariawan/bankofjakarta/spring-config.xml");
+
+        // get from context to help define dataSource - we not do this 'manually'
+        javax.sql.DataSource dataSource = appContext.getBean("dataSource", javax.sql.DataSource.class );
+
+        AccountDao accountDao = new AccountDaoImpl(dataSource);
+        NextIdDao nextIdDao = new NextIdDaoImpl(dataSource);
+        TxDao txDao = new TxDaoImpl(dataSource);
+
+        TxService txService = new TxServiceImpl(txDao, accountDao, nextIdDao);
+        try {
+            // Use the service
+            txService.withdraw(new BigDecimal("100"), "Withdraw 100$", "5008");
+        } catch (InvalidParameterException | AccountNotFoundException | IllegalAccountTypeException | InsufficientFundsException ex) {
+            System.out.println("Exception: " + ex.getMessage());
+        }
+    }
+    
+    void testBeanSetter() {
+        // Create the application from the configuration
+        ApplicationContext appContext = new ClassPathXmlApplicationContext("com/dariawan/bankofjakarta/spring-config.xml");
+
+        // get from context to help define dataSource - we not do this 'manually'
+        javax.sql.DataSource dataSource = appContext.getBean("dataSource", javax.sql.DataSource.class );
+
+        AccountDao accountDao = new AccountDaoImpl();
+        accountDao.setDataSource(dataSource);
+        
+        NextIdDao nextIdDao = new NextIdDaoImpl();
+        nextIdDao.setDataSource(dataSource);
+        
+        TxDao txDao = new TxDaoImpl(dataSource);
+        txDao.setDataSource(dataSource);
+
+        TxService txService = new TxServiceImpl();
+        txService.setAccountDao(accountDao);
+        txService.setNextIdDao(nextIdDao);
+        txService.setTxDao(txDao);
+        
+        try {
+            // Use the service
+            txService.withdraw(new BigDecimal("100"), "Withdraw 100$", "5008");
+        } catch (InvalidParameterException | AccountNotFoundException | IllegalAccountTypeException | InsufficientFundsException ex) {
+            System.out.println("Exception: " + ex.getMessage());
+        }
+    }
+    
+    void testBeanConfigurationAndFunction() {
+        // Create the application from the configuration
+        ApplicationContext appContext = new ClassPathXmlApplicationContext("com/dariawan/bankofjakarta/spring-config.xml");
 
         AccountService accountService = appContext.getBean("accountService", AccountService.class);
         try {
@@ -63,5 +123,11 @@ public class SpringTestApp {
             System.out.println("Exception: " + ex.getMessage());
         }
         */
+    }
+    
+    public static void main(String[] args) {
+        SpringTestApp app = new SpringTestApp();
+        // app.testBeanConstructor();
+        app.testBeanSetter();
     }
 }

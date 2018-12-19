@@ -4,8 +4,11 @@ import com.dariawan.bankofjakarta.domain.Account;
 import com.dariawan.bankofjakarta.exception.db.CreateException;
 import com.dariawan.bankofjakarta.exception.db.FinderException;
 import java.util.List;
+import javax.sql.DataSource;
 
 public interface AccountDao {
+    
+    void setDataSource(DataSource dataSource);
 
     Account create(Account account) throws CreateException;
     

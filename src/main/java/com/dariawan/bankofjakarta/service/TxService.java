@@ -1,5 +1,8 @@
 package com.dariawan.bankofjakarta.service;
 
+import com.dariawan.bankofjakarta.dao.AccountDao;
+import com.dariawan.bankofjakarta.dao.NextIdDao;
+import com.dariawan.bankofjakarta.dao.TxDao;
 import com.dariawan.bankofjakarta.domain.Tx;
 import com.dariawan.bankofjakarta.exception.AccountNotFoundException;
 import com.dariawan.bankofjakarta.exception.IllegalAccountTypeException;
@@ -12,6 +15,12 @@ import java.util.Date;
 import java.util.List;
 
 public interface TxService {
+    
+    void setTxDao(TxDao txDao);
+
+    void setAccountDao(AccountDao accountDao);
+
+    void setNextIdDao(NextIdDao nextIdDao);
 
     // getters
     List<Tx> getTxsOfAccount(Date startDate, Date endDate, String accountId)
