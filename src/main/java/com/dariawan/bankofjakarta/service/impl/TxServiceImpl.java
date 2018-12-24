@@ -42,12 +42,17 @@ public class TxServiceImpl implements TxService {
     public TxServiceImpl() {        
     }
     
+    public TxServiceImpl(AccountDao accountDao, NextIdDao nextIdDao) {
+        this.accountDao = accountDao;
+        this.nextIdDao = nextIdDao;
+    }
+
     public TxServiceImpl(TxDao txDao, AccountDao accountDao, NextIdDao nextIdDao) {
         this.txDao = txDao;
         this.accountDao = accountDao;
         this.nextIdDao = nextIdDao;
     }
-    
+        
     public List<Tx> getTxsOfAccount(Date startDate, Date endDate, String accountId)
             throws InvalidParameterException {
 

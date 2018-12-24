@@ -26,12 +26,12 @@
     </bean>
 
     <!-- DAOs -->
-    <!--<bean id="accountDao" class="com.dariawan.bankofjakarta.dao.impl.AccountDaoImpl">
-        <constructor-arg ref="dataSource" />
-    </bean>-->
     <bean id="accountDao" class="com.dariawan.bankofjakarta.dao.impl.AccountDaoImpl">
-        <property name="dataSource" ref="dataSource"/>
+        <constructor-arg ref="dataSource" />
     </bean>
+    <!--<bean id="accountDao" class="com.dariawan.bankofjakarta.dao.impl.AccountDaoImpl">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>-->
 
     <bean id="customerAccountDao" class="com.dariawan.bankofjakarta.dao.impl.CustomerAccountDaoImpl">
         <constructor-arg ref="dataSource" />
@@ -41,12 +41,12 @@
         <constructor-arg ref="dataSource" />
     </bean>
 
-    <!--<bean id="nextIdDao" class="com.dariawan.bankofjakarta.dao.impl.NextIdDaoImpl">
-        <constructor-arg ref="dataSource" />
-    </bean>-->
     <bean id="nextIdDao" class="com.dariawan.bankofjakarta.dao.impl.NextIdDaoImpl">
-        <property name="dataSource" ref="dataSource"/>
+        <constructor-arg ref="dataSource" />
     </bean>
+    <!--<bean id="nextIdDao" class="com.dariawan.bankofjakarta.dao.impl.NextIdDaoImpl">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>-->
 
     <!--<bean id="txDao" class="com.dariawan.bankofjakarta.dao.impl.TxDaoImpl">
         <constructor-arg ref="dataSource" />
@@ -77,11 +77,24 @@
         <constructor-arg ref="txDao" />       
     </bean>
     -->
+
     <bean id="txService" class="com.dariawan.bankofjakarta.service.impl.TxServiceImpl">
+        <constructor-arg ref="accountDao" />
+        <constructor-arg ref="nextIdDao" />
+        <constructor-arg ref="txDao" />       
+    </bean>
+
+    <!--<bean id="txService" class="com.dariawan.bankofjakarta.service.impl.TxServiceImpl">
         <property name="accountDao" ref="accountDao"/>
         <property name="nextIdDao" ref="nextIdDao"/>
         <property name="txDao" ref="txDao"/>  
-    </bean>
+    </bean>-->
+
+    <!--<bean id="txService" class="com.dariawan.bankofjakarta.service.impl.TxServiceImpl">
+        <constructor-arg ref="accountDao" />
+        <constructor-arg ref="nextIdDao" />
+        <property name="txDao" ref="txDao"/>  
+    </bean>-->
     
     <!-- the transactional advice (what 'happens'; see the <aop:advisor/> bean below) -->
     <tx:advice id="txAdvice" transaction-manager="transactionManager">

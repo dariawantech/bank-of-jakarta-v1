@@ -80,10 +80,10 @@ public class SpringTestApp {
 
         AccountDao accountDao = new AccountDaoImpl();
         accountDao.setDataSource(dataSource);
-        
+
         NextIdDao nextIdDao = new NextIdDaoImpl();
         nextIdDao.setDataSource(dataSource);
-        
+
         TxDao txDao = new TxDaoImpl(dataSource);
         txDao.setDataSource(dataSource);
 
@@ -91,7 +91,7 @@ public class SpringTestApp {
         txService.setAccountDao(accountDao);
         txService.setNextIdDao(nextIdDao);
         txService.setTxDao(txDao);
-        
+
         try {
             // Use the service
             txService.withdraw(new BigDecimal("100"), "Withdraw 100$", "5008");
@@ -100,6 +100,30 @@ public class SpringTestApp {
         }
     }
     
+     void testBeanMixConstructorSetter() {
+        // Create the application from the configuration
+        ApplicationContext appContext = new ClassPathXmlApplicationContext("com/dariawan/bankofjakarta/spring-config.xml");
+
+        // get from context to help define dataSource - we not do this 'manually'
+        javax.sql.DataSource dataSource = appContext.getBean("dataSource", javax.sql.DataSource.class );
+
+        AccountDao accountDao = new AccountDaoImpl(dataSource);
+        NextIdDao nextIdDao = new NextIdDaoImpl(dataSource);
+
+        TxDao txDao = new TxDaoImpl(dataSource);
+        txDao.setDataSource(dataSource);
+
+        TxService txService = new TxServiceImpl(accountDao, nextIdDao);
+        txService.setTxDao(txDao);
+
+        try {
+            // Use the service
+            txService.withdraw(new BigDecimal("100"), "Withdraw 100$", "5008");
+        } catch (InvalidParameterException | AccountNotFoundException | IllegalAccountTypeException | InsufficientFundsException ex) {
+            System.out.println("Exception: " + ex.getMessage());
+        }
+    }
+     
     void testBeanConfigurationAndFunction() {
         // Create the application from the configuration
         ApplicationContext appContext = new ClassPathXmlApplicationContext("com/dariawan/bankofjakarta/spring-config.xml");
@@ -127,7 +151,9 @@ public class SpringTestApp {
     
     public static void main(String[] args) {
         SpringTestApp app = new SpringTestApp();
+        app.testBeanConfiguration();
         // app.testBeanConstructor();
-        app.testBeanSetter();
+        // app.testBeanSetter();
+        // app.testBeanMixConstructorSetter();
     }
 }
