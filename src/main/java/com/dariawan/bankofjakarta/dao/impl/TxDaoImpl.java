@@ -1,6 +1,7 @@
 package com.dariawan.bankofjakarta.dao.impl;
 
 import com.dariawan.bankofjakarta.dao.TxDao;
+import com.dariawan.bankofjakarta.domain.Account;
 import com.dariawan.bankofjakarta.domain.Tx;
 import com.dariawan.bankofjakarta.exception.db.CreateException;
 import com.dariawan.bankofjakarta.exception.db.FinderException;
@@ -28,6 +29,8 @@ public class TxDaoImpl implements TxDao {
     private static final String SQL_FIND_BY_ACCOUNT_ID = "select * from TX "
             + "where account_id = ? "
             + "and timestamp between ? and ?";
+    
+    private static final String SQL_DELETE_BY_ACCOUNT_ID = "delete from TX where account_id = ?";
     
     private JdbcTemplate jdbcTemplate;
 
@@ -90,5 +93,9 @@ public class TxDaoImpl implements TxDao {
             Tx tx = new Tx(txId, accountId, timeStamp, amount, balance, description);
             return tx;
         }
+    }
+    
+    public void removeByAccount(Account account) {
+        jdbcTemplate.update(SQL_DELETE_BY_ACCOUNT_ID, account.getAccountId());
     }
 }

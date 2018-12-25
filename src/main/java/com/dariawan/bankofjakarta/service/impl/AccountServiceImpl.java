@@ -4,6 +4,7 @@ import com.dariawan.bankofjakarta.dao.AccountDao;
 import com.dariawan.bankofjakarta.dao.CustomerAccountDao;
 import com.dariawan.bankofjakarta.dao.CustomerDao;
 import com.dariawan.bankofjakarta.dao.NextIdDao;
+import com.dariawan.bankofjakarta.dao.TxDao;
 import com.dariawan.bankofjakarta.domain.Account;
 import com.dariawan.bankofjakarta.domain.Customer;
 import com.dariawan.bankofjakarta.domain.NextId;
@@ -24,6 +25,7 @@ public class AccountServiceImpl implements AccountService {
     private CustomerDao customerDao;
     private NextIdDao nextIdDao;
     private CustomerAccountDao customerAccountDao;
+    private TxDao txDao;
 
     public void setAccountDao(AccountDao accountDao) {
         this.accountDao = accountDao;
@@ -41,15 +43,21 @@ public class AccountServiceImpl implements AccountService {
         this.customerAccountDao = customerAccountDao;
     }
 
+    public void setTxDao(TxDao txDao) {
+        this.txDao = txDao;
+    }
+    
     public AccountServiceImpl() {        
     }
     
     public AccountServiceImpl(AccountDao accountDao, CustomerDao customerDao, 
-            NextIdDao nextIdDao, CustomerAccountDao customerAccountDao) {
+            NextIdDao nextIdDao, CustomerAccountDao customerAccountDao, 
+            TxDao txDao) {
         this.accountDao = accountDao;
         this.customerDao = customerDao;
         this.nextIdDao = nextIdDao;
         this.customerAccountDao = customerAccountDao;
+        this.txDao = txDao;
     }
     
     // account creation and removal methods
@@ -102,6 +110,7 @@ public class AccountServiceImpl implements AccountService {
         try {
             account = accountDao.findByPrimaryKey(accountId);
 
+            txDao.removeByAccount(account);
             customerAccountDao.removeByAccount(account);
             accountDao.remove(account);
         } catch (FinderException ex) {
@@ -201,7 +210,7 @@ public class AccountServiceImpl implements AccountService {
         return accounts;
     }
 
-    public ArrayList getCustomerIds(String accountId)
+    public List<String> getCustomerIds(String accountId)
             throws InvalidParameterException, AccountNotFoundException {
         List<Customer> customers = null;
         Account account = null;
@@ -242,7 +251,7 @@ public class AccountServiceImpl implements AccountService {
         return account;
     }
     
-    private ArrayList copyCustomerIdsToArrayList(Collection customers) {
+    private List<String> copyCustomerIdsToArrayList(Collection customers) {
         ArrayList customerIdList = new ArrayList();
         Iterator i = customers.iterator();
 

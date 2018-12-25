@@ -62,6 +62,7 @@
         <constructor-arg ref="customerDao" />
         <constructor-arg ref="nextIdDao" />
         <constructor-arg ref="customerAccountDao" />
+        <constructor-arg ref="txDao" />
     </bean>
 
     <bean id="customerService" class="com.dariawan.bankofjakarta.service.impl.CustomerServiceImpl">

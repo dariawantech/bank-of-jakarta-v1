@@ -1,5 +1,6 @@
 package com.dariawan.bankofjakarta.dao;
 
+import com.dariawan.bankofjakarta.domain.Account;
 import com.dariawan.bankofjakarta.domain.Tx;
 import com.dariawan.bankofjakarta.exception.db.CreateException;
 import com.dariawan.bankofjakarta.exception.db.FinderException;
@@ -17,4 +18,6 @@ public interface TxDao {
 
     List<Tx> findByAccountId(Date startDate, Date endDate, String accountId)
             throws FinderException;
+    
+    void removeByAccount(Account account);
 } // TxDao

@@ -10,38 +10,36 @@ import java.util.List;
 
 public interface AccountService {
 
-    // account creation and removal methods
+    // makes a new account and enters it into db,
+    // customer for customerId must exist 1st    
     public String createAccount(Account account, String customerId)
             throws IllegalAccountTypeException,
             CustomerNotFoundException, InvalidParameterException;
 
-    // makes a new account and enters it into db,
-    // customer for customerId must exist 1st
+    // account removal methods
     public void removeAccount(String accountId)
             throws InvalidParameterException,
             AccountNotFoundException;
 
-    // removes account from db
-    // customer-account relationship methods
-    public void addCustomerToAccount(String customerId, String accountId)
-            throws InvalidParameterException,
-            CustomerNotFoundException, AccountNotFoundException;
-
     // adds another customer to the account
-    public void removeCustomerFromAccount(String customerId, String accountId)
+    public void addCustomerToAccount(String customerId, String accountId)
             throws InvalidParameterException,
             CustomerNotFoundException, AccountNotFoundException;
 
     // removes a customer from the account, but
     // the customer is not removed from the db
-    public List<Account> getAccountsOfCustomer(String customerId)
+    public void removeCustomerFromAccount(String customerId, String accountId)
             throws InvalidParameterException,
-            CustomerNotFoundException;
+            CustomerNotFoundException, AccountNotFoundException;
 
     // returns an ArrayList of Account objects
     // that correspond to the accounts for the specified
     // customer
-    public ArrayList getCustomerIds(String accountId)
+    public List<Account> getAccountsOfCustomer(String customerId)
+            throws InvalidParameterException,
+            CustomerNotFoundException;
+
+    public List<String> getCustomerIds(String accountId)
             throws InvalidParameterException,
             AccountNotFoundException;
 

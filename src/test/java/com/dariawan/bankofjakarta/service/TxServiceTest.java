@@ -10,14 +10,12 @@ import java.math.BigDecimal;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
-import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 
 /**
  * 
  * abstract class TxServiceTest
- * extends AbstractTransactionalJUnit4SpringContextTests for transaction rollback
  */
-public abstract class TxServiceTest extends AbstractTransactionalJUnit4SpringContextTests {
+public abstract class TxServiceTest extends BaseServiceTest {
 
     public abstract TxService getTxService();
     public abstract AccountService getAccountService();
