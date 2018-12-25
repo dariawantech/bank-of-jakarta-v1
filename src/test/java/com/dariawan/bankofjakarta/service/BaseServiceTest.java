@@ -1,6 +1,7 @@
 package com.dariawan.bankofjakarta.service;
 
 import com.dariawan.bankofjakarta.domain.Account;
+import com.dariawan.bankofjakarta.domain.Customer;
 import static org.junit.Assert.assertNotNull;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 
@@ -19,5 +20,15 @@ public abstract class BaseServiceTest extends AbstractTransactionalJUnit4SpringC
         assertNotNull(acc.getCreditLine());
         assertNotNull(acc.getBeginBalance());
         assertNotNull(acc.getBeginBalanceTimeStamp());
+    }
+    
+    protected void verifyCustomer(Customer cust) {
+        assertNotNull(cust);
+        assertNotNull(cust.getCustomerId());
+        assertNotNull(cust.getLastName());
+        assertNotNull(cust.getFirstName());
+        assertNotNull(cust.getCity());
+        assertNotNull(cust.getPhone());
+        assertNotNull(cust.getEmail());
     }
 }

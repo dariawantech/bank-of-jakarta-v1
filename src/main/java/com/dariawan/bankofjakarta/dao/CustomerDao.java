@@ -1,8 +1,6 @@
 package com.dariawan.bankofjakarta.dao;
 
 import com.dariawan.bankofjakarta.domain.Customer;
-import com.dariawan.bankofjakarta.exception.CustomerNotFoundException;
-import com.dariawan.bankofjakarta.exception.InvalidParameterException;
 import com.dariawan.bankofjakarta.exception.db.CreateException;
 import com.dariawan.bankofjakarta.exception.db.FinderException;
 import java.util.List;

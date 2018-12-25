@@ -5,10 +5,10 @@ import com.dariawan.bankofjakarta.exception.AccountNotFoundException;
 import com.dariawan.bankofjakarta.exception.CustomerNotFoundException;
 import com.dariawan.bankofjakarta.exception.IllegalAccountTypeException;
 import com.dariawan.bankofjakarta.exception.InvalidParameterException;
-import java.util.ArrayList;
 import java.util.List;
 
 public interface AccountService {
+    // account creation and removal methods
 
     // makes a new account and enters it into db,
     // customer for customerId must exist 1st    

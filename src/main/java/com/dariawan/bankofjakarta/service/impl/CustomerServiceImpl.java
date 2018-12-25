@@ -1,6 +1,7 @@
 package com.dariawan.bankofjakarta.service.impl;
 
 import com.dariawan.bankofjakarta.dao.AccountDao;
+import com.dariawan.bankofjakarta.dao.CustomerAccountDao;
 import com.dariawan.bankofjakarta.dao.CustomerDao;
 import com.dariawan.bankofjakarta.dao.NextIdDao;
 import com.dariawan.bankofjakarta.domain.Account;
@@ -17,6 +18,7 @@ public class CustomerServiceImpl implements CustomerService {
     private CustomerDao customerDao;
     private AccountDao accountDao;
     private NextIdDao nextIdDao;
+    private CustomerAccountDao customerAccountDao;
 
     public void setCustomerDao(CustomerDao customerDao) {
         this.customerDao = customerDao;
@@ -30,14 +32,19 @@ public class CustomerServiceImpl implements CustomerService {
         this.nextIdDao = nextIdDao;
     }
     
+    public void setCustomerAccountDao(CustomerAccountDao customerAccountDao) {
+        this.customerAccountDao = customerAccountDao;
+    }
+    
     public CustomerServiceImpl() {        
     }
     
     public CustomerServiceImpl(CustomerDao customerDao, AccountDao accountDao, 
-            NextIdDao nextIdDao) {
+            NextIdDao nextIdDao, CustomerAccountDao customerAccountDao) {
         this.customerDao = customerDao;
         this.accountDao = accountDao;
         this.nextIdDao = nextIdDao;
+        this.customerAccountDao = customerAccountDao;
     }
     
     // customer creation and removal methods
@@ -74,6 +81,8 @@ public class CustomerServiceImpl implements CustomerService {
 
         try {
             Customer customer = customerDao.findByPrimaryKey(customerId);
+            
+            customerAccountDao.removeByCustomer(customer);
             customerDao.remove(customer);
         } catch (Exception ex) {
             throw new IllegalStateException("removeCustomer: " + ex.getMessage());
@@ -224,6 +233,6 @@ public class CustomerServiceImpl implements CustomerService {
             return false;
         }
 
-        return customer==null;
+        return customer!=null;
     }
 } // CustomerServiceImpl

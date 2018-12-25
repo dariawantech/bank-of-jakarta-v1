@@ -23,8 +23,7 @@ public abstract class TxServiceTest extends BaseServiceTest {
     private Account getAccount(String accountId) {
         try {
             Account acc = getAccountService().getDetails(accountId);
-            assertNotNull(acc);
-            assertNotNull(acc.getAccountId());
+            verifyAccount(acc);
             
             return acc;
         } catch (InvalidParameterException ex) {

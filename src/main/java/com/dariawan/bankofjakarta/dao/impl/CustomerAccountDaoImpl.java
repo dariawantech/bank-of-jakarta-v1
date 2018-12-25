@@ -17,7 +17,9 @@ public class CustomerAccountDaoImpl implements CustomerAccountDao {
     
     private static final String SQL_DELETE_BY_ACCOUNT_ID = "delete from CUSTOMER_ACCOUNT_XREF where account_id = ?";
     
-    private static final String SQL_DELETE_BY_CUSOMER_N_ACCOUNT_ID = "delete from CUSTOMER_ACCOUNT_XREF where customer_id = ? and account_id = ?";
+    private static final String SQL_DELETE_BY_CUSTOMER_ID = "delete from CUSTOMER_ACCOUNT_XREF where customer_id = ?";
+    
+    private static final String SQL_DELETE_BY_CUSTOMER_N_ACCOUNT_ID = "delete from CUSTOMER_ACCOUNT_XREF where customer_id = ? and account_id = ?";
     
     private JdbcTemplate jdbcTemplate;
 
@@ -49,7 +51,11 @@ public class CustomerAccountDaoImpl implements CustomerAccountDao {
         jdbcTemplate.update(SQL_DELETE_BY_ACCOUNT_ID, account.getAccountId());
     }
     
+    public void removeByCustomer(Customer customer) {
+        jdbcTemplate.update(SQL_DELETE_BY_CUSTOMER_ID, customer.getCustomerId());
+    }
+    
     public void removeCustomerFromAccount(Customer customer, Account account) {
-        jdbcTemplate.update(SQL_DELETE_BY_CUSOMER_N_ACCOUNT_ID, customer.getCustomerId(), account.getAccountId());
+        jdbcTemplate.update(SQL_DELETE_BY_CUSTOMER_N_ACCOUNT_ID, customer.getCustomerId(), account.getAccountId());
     }
 }

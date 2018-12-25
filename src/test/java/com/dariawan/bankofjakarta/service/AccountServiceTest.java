@@ -7,6 +7,8 @@ import com.dariawan.bankofjakarta.exception.IllegalAccountTypeException;
 import com.dariawan.bankofjakarta.exception.InvalidParameterException;
 import java.math.BigDecimal;
 import java.util.GregorianCalendar;
+import java.util.List;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -38,7 +40,13 @@ public abstract class AccountServiceTest extends BaseServiceTest {
     
     @Test
     public void testRemoveAccount() throws InvalidParameterException, AccountNotFoundException {
-        getAccountService().removeAccount("5005");        
+        Account acc1 = getAccountService().getDetails("5005");
+        verifyAccount(acc1);
+        
+        getAccountService().removeAccount("5005");
+        
+        Account acc2 = getAccountService().getDetails("5005");
+        Assert.assertNull(acc2);
     }
          
     @Test
@@ -53,11 +61,15 @@ public abstract class AccountServiceTest extends BaseServiceTest {
     
     @Test
     public void testGetAccountsOfCustomer() throws InvalidParameterException, CustomerNotFoundException {
-        getAccountService().getAccountsOfCustomer("200");
+        List<Account> accounts = getAccountService().getAccountsOfCustomer("200");
+        Assert.assertNotNull(accounts);
+        Assert.assertFalse(accounts.isEmpty());
     }
 
     @Test
     public void testGetCustomerIds() throws InvalidParameterException, AccountNotFoundException {
-        getAccountService().getCustomerIds("5005");
+        List<String> customerIds = getAccountService().getCustomerIds("5005");
+        Assert.assertNotNull(customerIds);
+        Assert.assertFalse(customerIds.isEmpty());
     }    
 }

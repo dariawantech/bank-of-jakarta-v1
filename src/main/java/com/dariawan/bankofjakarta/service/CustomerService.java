@@ -17,20 +17,19 @@ public interface CustomerService {
             throws CustomerNotFoundException, InvalidParameterException;
 
     // getters
+    
     // returns the details of a customer
     Customer getDetails(String customerId)
             throws CustomerNotFoundException, InvalidParameterException;
 
     // returns a List of Customer objects
-    // that correspond to the customers for the specified
-    // account
+    // that correspond to the customers for the specified account
     List<Customer> getCustomersOfAccount(String accountId)
             throws CustomerNotFoundException, InvalidParameterException;
 
     // returns a List of Customer objects
-    // that correspond to the customers for the specified
-    // last name; if now customers are found the ArrayList
-    // is empty
+    // that correspond to the customers for the specified last name;
+    // if now customers are found the List is empty
     List<Customer> getCustomersOfLastName(String lastName) throws InvalidParameterException;
 
     // setters

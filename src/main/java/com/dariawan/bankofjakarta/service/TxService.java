@@ -23,42 +23,42 @@ public interface TxService {
     void setNextIdDao(NextIdDao nextIdDao);
 
     // getters
+    
+    // returns an ArrayList of Tx objects
+    // that correspond to the txs for the specified account
     List<Tx> getTxsOfAccount(Date startDate, Date endDate, String accountId)
             throws InvalidParameterException;
 
-    // returns an ArrayList of Tx objects
-    // that correspond to the txs for the specified account
+    // returns the Tx for the specified tx
+    // business transaction methods
     Tx getDetails(String txId)
             throws TxNotFoundException, InvalidParameterException;
 
-    // returns the Tx for the specified tx
-    // business transaction methods
+    // withdraws funds from a non-credit account
     void withdraw(BigDecimal amount, String description, String accountId)
             throws InvalidParameterException,
             AccountNotFoundException, IllegalAccountTypeException,
             InsufficientFundsException;
 
-    // withdraws funds from a non-credit account
+    // deposits funds to a non-credit account
     void deposit(BigDecimal amount, String description, String accountId)
             throws InvalidParameterException,
             AccountNotFoundException, IllegalAccountTypeException;
 
-    // deposits funds to a non-credit account
+    // transfers funds from one account to another
     void transferFunds(BigDecimal amount, String description,
             String fromAccountId, String toAccountId)
             throws InvalidParameterException,
             AccountNotFoundException, InsufficientFundsException,
             InsufficientCreditException;
 
-    // transfers funds from one account to another
+    // makes a charge to a credit account
     void makeCharge(BigDecimal amount, String description, String accountId)
             throws InvalidParameterException, AccountNotFoundException,
             IllegalAccountTypeException, InsufficientCreditException;
 
-    // makes a charge to a credit account
+    // makes a payment to a credit account
     void makePayment(BigDecimal amount, String description, String accountId)
             throws InvalidParameterException, AccountNotFoundException,
-            IllegalAccountTypeException;
-
-    // makes a payment to a credit account
+            IllegalAccountTypeException;    
 }

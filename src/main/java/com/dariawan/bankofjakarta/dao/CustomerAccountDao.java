@@ -9,5 +9,7 @@ public interface CustomerAccountDao {
     
     void removeByAccount(Account account);
     
+    void removeByCustomer(Customer customer);    
+    
     void removeCustomerFromAccount(Customer customer, Account account);
 }

@@ -69,6 +69,7 @@
         <constructor-arg ref="customerDao" />
         <constructor-arg ref="accountDao" />        
         <constructor-arg ref="nextIdDao" />
+        <constructor-arg ref="customerAccountDao" />
     </bean>
 
     <!--
