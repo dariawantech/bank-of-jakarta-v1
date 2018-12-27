@@ -23,6 +23,7 @@
         <postgresql.version>42.2.5</postgresql.version>
         <aspectjweaver.version>1.8.9</aspectjweaver.version>
         <org.springframework.version>4.3.21.RELEASE</org.springframework.version>
+        <jmockit.version>1.44</jmockit.version>
     </properties>
 
     <dependencies>
@@ -106,6 +107,14 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
             <version>${org.springframework.version}</version>
+            <scope>test</scope>
+        </dependency>
+        
+        <!-- JMockit Dependency -->
+        <dependency>
+            <groupId>org.jmockit</groupId>
+            <artifactId>jmockit</artifactId>
+            <version>${jmockit.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

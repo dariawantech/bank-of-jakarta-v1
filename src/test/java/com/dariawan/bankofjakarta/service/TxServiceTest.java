@@ -7,7 +7,6 @@ import com.dariawan.bankofjakarta.exception.InsufficientCreditException;
 import com.dariawan.bankofjakarta.exception.InsufficientFundsException;
 import com.dariawan.bankofjakarta.exception.InvalidParameterException;
 import java.math.BigDecimal;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
@@ -55,7 +54,7 @@ public abstract class TxServiceTest extends BaseServiceTest {
     
     @Test
     public void testMakeCharge() throws InvalidParameterException, AccountNotFoundException, IllegalAccountTypeException, InsufficientCreditException {
-        // as long as not credit account
+        // as long as credit account
         Account acc1 = getAccount("5007");
         BigDecimal balanceNow = acc1.getBalance();
         getTxService().makeCharge(new BigDecimal("1500"), "Charge 1500", acc1.getAccountId());
@@ -64,8 +63,8 @@ public abstract class TxServiceTest extends BaseServiceTest {
     }
     
     @Test
-    public void testMakePayment() throws InvalidParameterException, AccountNotFoundException, IllegalAccountTypeException, InsufficientCreditException, InsufficientFundsException, InsufficientFundsException {
-        // as long as not credit account
+    public void testMakePayment() throws InvalidParameterException, AccountNotFoundException, IllegalAccountTypeException {
+        // as long as credit account
         Account acc1 = getAccount("5007");
         BigDecimal balanceNow = acc1.getBalance();
         getTxService().makePayment(new BigDecimal("200"), "Payment 200", acc1.getAccountId());
@@ -74,8 +73,7 @@ public abstract class TxServiceTest extends BaseServiceTest {
     }
     
     @Test
-    public void testTransferFunds() throws InvalidParameterException, AccountNotFoundException, IllegalAccountTypeException, InsufficientCreditException, InsufficientFundsException {
-        // as long as not credit account
+    public void testTransferFunds() throws InvalidParameterException, AccountNotFoundException, InsufficientCreditException, InsufficientFundsException {
         Account accFrom1 = getAccount("5008");
         BigDecimal balanceFromNow = accFrom1.getBalance();
         

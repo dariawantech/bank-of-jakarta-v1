@@ -45,8 +45,12 @@ public abstract class AccountServiceTest extends BaseServiceTest {
         
         getAccountService().removeAccount("5005");
         
-        Account acc2 = getAccountService().getDetails("5005");
-        Assert.assertNull(acc2);
+        try {
+            getAccountService().getDetails("5005");
+        }
+        catch (AccountNotFoundException ex) {
+            // AccountNotFoundException thrown since 5005 not exists anymore
+        }
     }
          
     @Test

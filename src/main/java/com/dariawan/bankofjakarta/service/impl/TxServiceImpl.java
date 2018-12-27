@@ -18,6 +18,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import org.springframework.util.StringUtils;
 
 public class TxServiceImpl implements TxService {
 
@@ -233,15 +234,15 @@ public class TxServiceImpl implements TxService {
             throws InvalidParameterException, AccountNotFoundException {
         Account account = null;
 
-        if (description == null) {
-            throw new InvalidParameterException("null description");
+        if (StringUtils.isEmpty(description)) {
+            throw new InvalidParameterException("null/empty description");
         }
 
-        if (accountId == null) {
-            throw new InvalidParameterException("null accountId");
+        if (StringUtils.isEmpty(accountId)) {
+            throw new InvalidParameterException("null/empty accountId");
         }
 
-        if (amount.compareTo(bigZero) != 1) {
+        if (amount == null || amount.compareTo(bigZero) != 1) {
             throw new InvalidParameterException("amount <= 0");
         }
 

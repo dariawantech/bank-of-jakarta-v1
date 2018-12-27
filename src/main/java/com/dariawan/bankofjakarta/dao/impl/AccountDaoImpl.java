@@ -73,10 +73,10 @@ public class AccountDaoImpl implements AccountDao {
 
     public Account findByPrimaryKey(String accountId) throws FinderException {
         try {
-            Account account = jdbcTemplate.queryForObject(SQL_FIND_BY_ACCOUNT_ID, new ResultSetAccount(), accountId);
-            return account;
+            return jdbcTemplate.queryForObject(SQL_FIND_BY_ACCOUNT_ID, new ResultSetAccount(), accountId);
         } catch (EmptyResultDataAccessException err) {
-            return null;
+            // ata access exception thrown when a result was expected to have at least one row (or element) but zero rows (or elements) were actually returned.
+            throw new FinderException(err.getMessage());
         }
     }
 
