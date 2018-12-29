@@ -10,7 +10,6 @@ import com.dariawan.bankofjakarta.domain.Customer;
 import com.dariawan.bankofjakarta.domain.NextId;
 import com.dariawan.bankofjakarta.exception.AccountNotFoundException;
 import com.dariawan.bankofjakarta.exception.CustomerNotFoundException;
-import com.dariawan.bankofjakarta.exception.IllegalAccountTypeException;
 import com.dariawan.bankofjakarta.exception.InvalidParameterException;
 import com.dariawan.bankofjakarta.exception.db.FinderException;
 import com.dariawan.bankofjakarta.service.AccountService;
@@ -18,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import org.springframework.util.StringUtils;
 
 public class AccountServiceImpl implements AccountService {
 
@@ -62,19 +62,18 @@ public class AccountServiceImpl implements AccountService {
     
     // account creation and removal methods
     public String createAccount(Account account, String customerId)
-            throws IllegalAccountTypeException, CustomerNotFoundException,
-            InvalidParameterException {
+            throws CustomerNotFoundException, InvalidParameterException {
         // makes a new account and enters it into db,
         Customer customer = null;
 
-        if (account.getType() == null) {
-            throw new InvalidParameterException("null type");
-        } else if (account.getDescription() == null) {
-            throw new InvalidParameterException("null description");
+        if (StringUtils.isEmpty(account.getType())) {
+            throw new InvalidParameterException("null/empty type");
+        } else if (StringUtils.isEmpty(account.getDescription())) {
+            throw new InvalidParameterException("null/empty description");
         } else if (account.getBeginBalanceTimeStamp() == null) {
             throw new InvalidParameterException("null beginBalanceTimeStamp");
-        } else if (customerId == null) {
-            throw new InvalidParameterException("null customerId");
+        } else if (StringUtils.isEmpty(customerId)) {
+            throw new InvalidParameterException("null/empty customerId");
         }
 
         try {
@@ -101,14 +100,12 @@ public class AccountServiceImpl implements AccountService {
     public void removeAccount(String accountId)
             throws InvalidParameterException, AccountNotFoundException {
         // removes account
-        Account account = null;
-
-        if (accountId == null) {
-            throw new InvalidParameterException("null accountId");
+        if (StringUtils.isEmpty(accountId)) {
+            throw new InvalidParameterException("null/empty accountId");
         }
 
         try {
-            account = accountDao.findByPrimaryKey(accountId);
+            Account account = accountDao.findByPrimaryKey(accountId);
 
             txDao.removeByAccount(account);
             customerAccountDao.removeByAccount(account);
@@ -125,13 +122,12 @@ public class AccountServiceImpl implements AccountService {
             throws InvalidParameterException, CustomerNotFoundException,
             AccountNotFoundException {
         // adds another customer to the account
-        Customer customer = null;
         Account account = null;
 
-        if (customerId == null) {
-            throw new InvalidParameterException("null customerId");
-        } else if (accountId == null) {
-            throw new InvalidParameterException("null accountId");
+        if (StringUtils.isEmpty(customerId)) {
+            throw new InvalidParameterException("null/empty customerId");
+        } else if (StringUtils.isEmpty(accountId)) {
+            throw new InvalidParameterException("null/empty accountId");
         }
 
         try {
@@ -143,7 +139,7 @@ public class AccountServiceImpl implements AccountService {
         }
 
         try {
-            customer = customerDao.findByPrimaryKey(customerId);
+            Customer customer = customerDao.findByPrimaryKey(customerId);
 
             customerAccountDao.add(customer, account);
         } catch (FinderException ex) {
@@ -159,12 +155,11 @@ public class AccountServiceImpl implements AccountService {
         // removes a customer from this account, but
         // the customer is not removed from the db
         Account account = null;
-        Customer customer = null;
-
-        if (customerId == null) {
-            throw new InvalidParameterException("null customerId");
-        } else if (accountId == null) {
-            throw new InvalidParameterException("null accountId");
+        
+        if (StringUtils.isEmpty(customerId)) {
+            throw new InvalidParameterException("null/empty customerId");
+        } else if (StringUtils.isEmpty(accountId)) {
+            throw new InvalidParameterException("null/empty accountId");
         }
 
         try {
@@ -176,7 +171,7 @@ public class AccountServiceImpl implements AccountService {
         }
 
         try {
-            customer = customerDao.findByPrimaryKey(customerId);
+            Customer customer = customerDao.findByPrimaryKey(customerId);
             customerAccountDao.removeCustomerFromAccount(customer, account);
         } catch (FinderException ex) {
             throw new CustomerNotFoundException();
@@ -192,14 +187,13 @@ public class AccountServiceImpl implements AccountService {
         // that correspond to the accounts for the specified customer
 
         List<Account> accounts = null;
-        Customer customer = null;
-
-        if (customerId == null) {
-            throw new InvalidParameterException("null customerId");
+        
+        if (StringUtils.isEmpty(customerId)) {
+            throw new InvalidParameterException("null/empty customerId");
         }
 
         try {
-            customer = customerDao.findByPrimaryKey(customerId);
+            Customer customer = customerDao.findByPrimaryKey(customerId);
             accounts = accountDao.findByCustomerId(customer.getCustomerId());
         } catch (FinderException ex) {
             throw new CustomerNotFoundException();
@@ -213,14 +207,13 @@ public class AccountServiceImpl implements AccountService {
     public List<String> getCustomerIds(String accountId)
             throws InvalidParameterException, AccountNotFoundException {
         List<Customer> customers = null;
-        Account account = null;
 
-        if (accountId == null) {
-            throw new InvalidParameterException("null accountId");
+        if (StringUtils.isEmpty(accountId)) {
+            throw new InvalidParameterException("null/empty accountId");
         }
 
         try {
-            account = accountDao.findByPrimaryKey(accountId);
+            Account account = accountDao.findByPrimaryKey(accountId);
             customers = customerDao.findByAccountId(account.getAccountId());
         } catch (FinderException ex) {
             throw new AccountNotFoundException();
@@ -236,8 +229,8 @@ public class AccountServiceImpl implements AccountService {
 
         Account account = null;
 
-        if (accountId == null) {
-            throw new InvalidParameterException("null accountId");
+        if (StringUtils.isEmpty(accountId)) {
+            throw new InvalidParameterException("null/empty accountId");
         }
 
         try {

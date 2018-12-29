@@ -75,7 +75,7 @@ public class AccountDaoImpl implements AccountDao {
         try {
             return jdbcTemplate.queryForObject(SQL_FIND_BY_ACCOUNT_ID, new ResultSetAccount(), accountId);
         } catch (EmptyResultDataAccessException err) {
-            // ata access exception thrown when a result was expected to have at least one row (or element) but zero rows (or elements) were actually returned.
+            // EmptyResultDataAccessException thrown when a result was expected to have at least one row (or element) but zero rows (or elements) were actually returned.
             throw new FinderException(err.getMessage());
         }
     }

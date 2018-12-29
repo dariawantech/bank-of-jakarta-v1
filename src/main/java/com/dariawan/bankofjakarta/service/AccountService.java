@@ -13,13 +13,11 @@ public interface AccountService {
     // makes a new account and enters it into db,
     // customer for customerId must exist 1st    
     public String createAccount(Account account, String customerId)
-            throws IllegalAccountTypeException,
-            CustomerNotFoundException, InvalidParameterException;
+            throws CustomerNotFoundException, InvalidParameterException;
 
     // account removal methods
     public void removeAccount(String accountId)
-            throws InvalidParameterException,
-            AccountNotFoundException;
+            throws InvalidParameterException, AccountNotFoundException;
 
     // adds another customer to the account
     public void addCustomerToAccount(String customerId, String accountId)

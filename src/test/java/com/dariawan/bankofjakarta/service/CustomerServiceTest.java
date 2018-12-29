@@ -37,10 +37,12 @@ public abstract class CustomerServiceTest extends BaseServiceTest {
         Customer cust1 = getCustomerService().getDetails("200");
         verifyCustomer(cust1);
         
-        getCustomerService().removeCustomer("200");
-        
-        Customer cust2 = getCustomerService().getDetails("200");
-        Assert.assertNull(cust2);        
+        try {
+            getCustomerService().removeCustomer("200");
+        }
+        catch (CustomerNotFoundException ex) {
+            // CustomerNotFoundException thrown since 200 not exists anymore
+        }      
     }
 
     @Test

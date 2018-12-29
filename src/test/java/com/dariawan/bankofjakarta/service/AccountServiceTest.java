@@ -26,7 +26,7 @@ public abstract class AccountServiceTest extends BaseServiceTest {
     }
     
     @Test
-    public void testCreateAccount() throws IllegalAccountTypeException, CustomerNotFoundException, InvalidParameterException {
+    public void testCreateAccount() throws CustomerNotFoundException, InvalidParameterException {
         Account account = new Account();
         account.setType("Savings");
         account.setDescription("Savings Account");

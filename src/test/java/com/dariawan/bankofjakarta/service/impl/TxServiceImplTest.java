@@ -1,67 +1,14 @@
 package com.dariawan.bankofjakarta.service.impl;
 
-import com.dariawan.bankofjakarta.domain.Account;
 import com.dariawan.bankofjakarta.exception.AccountNotFoundException;
 import com.dariawan.bankofjakarta.exception.IllegalAccountTypeException;
 import com.dariawan.bankofjakarta.exception.InsufficientCreditException;
 import com.dariawan.bankofjakarta.exception.InsufficientFundsException;
 import com.dariawan.bankofjakarta.exception.InvalidParameterException;
-import com.dariawan.bankofjakarta.service.AccountService;
-import com.dariawan.bankofjakarta.service.TxService;
 import java.math.BigDecimal;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import org.junit.Before;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-public class TxServiceImplTest {
-    private TxService txService;
-    private AccountService accountService;
-
-    @Before
-    public void setUp() {
-        // Create the application from the configuration
-        ApplicationContext context = new ClassPathXmlApplicationContext("com/dariawan/bankofjakarta/**/spring-config-test.xml");
-        // Look up the application service interface
-        txService = context.getBean("txService", TxService.class);
-        accountService = context.getBean("accountService", AccountService.class);
-    }
-    
-    private void verifyAccount(Account acc) {
-        assertNotNull(acc);
-        assertNotNull(acc.getAccountId());
-        assertNotNull(acc.getType());
-        assertNotNull(acc.getDescription());
-        assertNotNull(acc.getBalance());
-        assertNotNull(acc.getCreditLine());
-        assertNotNull(acc.getBeginBalance());
-        assertNotNull(acc.getBeginBalanceTimeStamp());
-    }
-    
-    private Account getAccount(String accountId) {
-        try {
-            Account acc = accountService.getDetails(accountId);
-            verifyAccount(acc);
-            
-            return acc;
-        } catch (InvalidParameterException ex) {
-            return null;
-        } catch (AccountNotFoundException ex) {
-            return null;
-        }
-    }
-    
-    // @Test
-    public void testDeposit() throws InvalidParameterException, AccountNotFoundException, IllegalAccountTypeException {
-        // as long as not credit account
-        Account acc1 = getAccount("5008");
-        BigDecimal balanceNow = acc1.getBalance();
-        txService.deposit(new BigDecimal("100"), "Deposit 100", acc1.getAccountId());
-        Account acc2 = getAccount("5008");
-        assertEquals(acc2.getBalance().toString(), (balanceNow.add(new BigDecimal("100"))).toString());
-    }
+public class TxServiceImplTest extends BaseServiceImplTest {
     
     @Test(expected=InvalidParameterException.class)
     public void testCheckAccountArgsAmount0() throws InvalidParameterException, AccountNotFoundException, IllegalAccountTypeException {

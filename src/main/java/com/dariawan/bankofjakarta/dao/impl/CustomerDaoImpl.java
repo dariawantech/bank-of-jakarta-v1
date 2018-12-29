@@ -85,10 +85,10 @@ public class CustomerDaoImpl implements CustomerDao {
 
     public Customer findByPrimaryKey(String customerId) throws FinderException {
         try {
-            Customer customer = jdbcTemplate.queryForObject(SQL_FIND_BY_CUSTOMER_ID, new ResultSetCustomer(), customerId);
-            return customer;
+            return jdbcTemplate.queryForObject(SQL_FIND_BY_CUSTOMER_ID, new ResultSetCustomer(), customerId);
         } catch (EmptyResultDataAccessException err) {
-            return null;
+            // EmptyResultDataAccessException thrown when a result was expected to have at least one row (or element) but zero rows (or elements) were actually returned.
+            throw new FinderException(err.getMessage());
         }
     }
 
