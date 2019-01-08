@@ -6,9 +6,10 @@
     <artifactId>BankOfJakarta</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
+    <inceptionYear>2018</inceptionYear>
 
     <name>BankOfJakarta</name>
-    <url>http://maven.apache.org</url>
+    <url>https://www.dariawan.com</url>
 
     <properties>
         <java.version>1.8</java.version>
@@ -118,4 +119,56 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <inherited>false</inherited>
+                <groupId>com.google.code.maven-license-plugin</groupId>
+                <artifactId>maven-license-plugin</artifactId>
+                <version>1.4.0</version>
+                <configuration>
+                    <header>NOTICE</header>
+                    <failIfMissing>true</failIfMissing>
+                    <aggregate>true</aggregate>
+                    <properties>
+                        <owner>Dariawan</owner>
+                        <year>${project.inceptionYear}</year>
+                        <email>hello@dariawan.com</email>
+                    </properties>
+                    <excludes>
+                        <exclude>.hg/**</exclude>
+                        <exclude>.git/**</exclude>
+                        <exclude>.gitignore/**</exclude>
+                        <exclude>jenkins-jobs-configuration/**</exclude>
+                        <exclude>LICENSE</exclude>
+                        <exclude>NOTICE</exclude>
+                        <exclude>README.md</exclude>
+                        <exclude>**/Servers/**</exclude>
+                        <exclude>**/src/test/resources/**</exclude>
+                        <exclude>**/src/test/data/**</exclude>
+                        <exclude>.git/**</exclude>
+                        <exclude>**/.metadata/**</exclude>
+                        <exclude>**/.idea/**</exclude>
+                        <exclude>**/logs/**</exclude>
+                        <exclude>**/js/**</exclude>
+                        <exclude>**/css/**</exclude>
+                        <exclude>**/src/main/resources/**</exclude>
+                        <exclude>**/nb-configuration.xml</exclude>
+                        <exclude>**/nbactions.xml</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>check-headers</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <!--<goal>check</goal>-->
+                            <goal>format</goal>
+                            <!--<goal>remove</goal>-->
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>                        
+        </plugins>
+    </build>
 </project>
