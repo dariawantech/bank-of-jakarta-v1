@@ -1,6 +1,7 @@
 package com.dariawan.bankofjakarta.service;
 
 import com.dariawan.bankofjakarta.domain.Customer;
+import com.dariawan.bankofjakarta.exception.AccountNotFoundException;
 import com.dariawan.bankofjakarta.exception.CustomerNotFoundException;
 import com.dariawan.bankofjakarta.exception.InvalidParameterException;
 import java.util.List;
@@ -46,7 +47,7 @@ public abstract class CustomerServiceTest extends BaseServiceTest {
     }
 
     @Test
-    public void testGetCustomersOfAccount() throws CustomerNotFoundException, InvalidParameterException {
+    public void testGetCustomersOfAccount() throws InvalidParameterException, AccountNotFoundException {
         List<Customer> customers = getCustomerService().getCustomersOfAccount("5008");
         Assert.assertNotNull(customers);
         Assert.assertFalse(customers.isEmpty());

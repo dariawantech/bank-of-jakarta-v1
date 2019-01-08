@@ -1,6 +1,7 @@
 package com.dariawan.bankofjakarta.service;
 
 import com.dariawan.bankofjakarta.domain.Customer;
+import com.dariawan.bankofjakarta.exception.AccountNotFoundException;
 import com.dariawan.bankofjakarta.exception.CustomerNotFoundException;
 import com.dariawan.bankofjakarta.exception.InvalidParameterException;
 import java.util.List;
@@ -25,7 +26,7 @@ public interface CustomerService {
     // returns a List of Customer objects
     // that correspond to the customers for the specified account
     List<Customer> getCustomersOfAccount(String accountId)
-            throws CustomerNotFoundException, InvalidParameterException;
+            throws AccountNotFoundException, InvalidParameterException;
 
     // returns a List of Customer objects
     // that correspond to the customers for the specified last name;

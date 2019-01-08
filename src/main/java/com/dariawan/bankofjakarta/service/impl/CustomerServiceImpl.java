@@ -7,11 +7,13 @@ import com.dariawan.bankofjakarta.dao.NextIdDao;
 import com.dariawan.bankofjakarta.domain.Account;
 import com.dariawan.bankofjakarta.domain.Customer;
 import com.dariawan.bankofjakarta.domain.NextId;
+import com.dariawan.bankofjakarta.exception.AccountNotFoundException;
 import com.dariawan.bankofjakarta.exception.CustomerNotFoundException;
 import com.dariawan.bankofjakarta.exception.InvalidParameterException;
 import com.dariawan.bankofjakarta.exception.db.FinderException;
 import com.dariawan.bankofjakarta.service.CustomerService;
 import java.util.List;
+import org.springframework.util.StringUtils;
 
 public class CustomerServiceImpl implements CustomerService {
     
@@ -52,12 +54,12 @@ public class CustomerServiceImpl implements CustomerService {
         throws InvalidParameterException {
         // makes a new customer and enters it into db
         
-        if (customer.getLastName() == null) {
-            throw new InvalidParameterException("null lastName");
+        if (StringUtils.isEmpty(customer.getLastName())) {
+            throw new InvalidParameterException("null/empty lastName");
         }
 
-        if (customer.getFirstName() == null) {
-            throw new InvalidParameterException("null firstName");
+        if (StringUtils.isEmpty(customer.getFirstName())) {
+            throw new InvalidParameterException("null/empty firstName");
         }
 
         try {
@@ -75,13 +77,19 @@ public class CustomerServiceImpl implements CustomerService {
         throws CustomerNotFoundException, InvalidParameterException {
         // removes customer from db
         
-        if (customerId == null) {
-            throw new InvalidParameterException("null customerId");
+        if (StringUtils.isEmpty(customerId)) {
+            throw new InvalidParameterException("null/empty customerId");
         }
 
+        Customer customer;
+        
         try {
-            Customer customer = customerDao.findByPrimaryKey(customerId);
-            
+            customer = customerDao.findByPrimaryKey(customerId);
+        } catch (FinderException ex) {
+            throw new CustomerNotFoundException();
+        }
+        
+        try {
             customerAccountDao.removeByCustomer(customer);
             customerDao.remove(customer);
         } catch (Exception ex) {
@@ -96,8 +104,8 @@ public class CustomerServiceImpl implements CustomerService {
         
         Customer result;
 
-        if (customerId == null) {
-            throw new InvalidParameterException("null customerId");
+        if (StringUtils.isEmpty(customerId)) {
+            throw new InvalidParameterException("null/empty customerId");
         }
 
         try {
@@ -112,18 +120,24 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     public List<Customer> getCustomersOfAccount(String accountId)
-        throws InvalidParameterException {
+        throws AccountNotFoundException, InvalidParameterException {
         // returns an ArrayList of Customer 
         // that correspond to the accountId specified
         
         List<Customer> customers = null;
 
-        if (accountId == null) {
-            throw new InvalidParameterException("null accountId");
+        if (StringUtils.isEmpty(accountId)) {
+            throw new InvalidParameterException("null/empty accountId");
         }
 
+        Account account;
         try {
-            Account account = accountDao.findByPrimaryKey(accountId);
+            account = accountDao.findByPrimaryKey(accountId);
+        } catch (FinderException ex) {
+            throw new AccountNotFoundException();
+        }
+        
+        try {
             customers = customerDao.findByAccountId(account.getAccountId());
         } catch (Exception ex) {
             throw new IllegalStateException(ex.getMessage());
@@ -140,8 +154,8 @@ public class CustomerServiceImpl implements CustomerService {
         
         List<Customer> customers = null;
 
-        if (lastName == null) {
-            throw new InvalidParameterException("null lastName");
+        if (StringUtils.isEmpty(lastName)) {
+            throw new InvalidParameterException("null/empty lastName");
         }
 
         try {
@@ -158,16 +172,16 @@ public class CustomerServiceImpl implements CustomerService {
         String middleInitial, String customerId)
         throws CustomerNotFoundException, InvalidParameterException {
         
-        if (lastName == null) {
-            throw new InvalidParameterException("null lastName");
+        if (StringUtils.isEmpty(lastName)) {
+            throw new InvalidParameterException("null/empty lastName");
         }
 
-        if (firstName == null) {
-            throw new InvalidParameterException("null firstName");
+        if (StringUtils.isEmpty(firstName)) {
+            throw new InvalidParameterException("null/empty firstName");
         }
 
-        if (customerId == null) {
-            throw new InvalidParameterException("null customerId");
+        if (StringUtils.isEmpty(customerId)) {
+            throw new InvalidParameterException("null/empty customerId");
         }
 
         if (customerExists(customerId) == false) {
@@ -180,6 +194,8 @@ public class CustomerServiceImpl implements CustomerService {
             customer.setFirstName(firstName);
             customer.setMiddleInitial(middleInitial);
             customerDao.updateName(customer);
+        } catch (FinderException ex) {
+            throw new CustomerNotFoundException();
         } catch (Exception ex) {
             throw new IllegalStateException("setName: " + ex.getMessage());
         }
@@ -189,20 +205,20 @@ public class CustomerServiceImpl implements CustomerService {
         String zip, String phone, String email, String customerId)
         throws CustomerNotFoundException, InvalidParameterException {
         
-        if (street == null) {
-            throw new InvalidParameterException("null street");
+        if (StringUtils.isEmpty(street)) {
+            throw new InvalidParameterException("null/empty street");
         }
 
-        if (city == null) {
-            throw new InvalidParameterException("null city");
+        if (StringUtils.isEmpty(city )) {
+            throw new InvalidParameterException("null/empty city");
         }
 
-        if (state == null) {
-            throw new InvalidParameterException("null state");
+        if (StringUtils.isEmpty(state)) {
+            throw new InvalidParameterException("null/empty state");
         }
 
-        if (customerId == null) {
-            throw new InvalidParameterException("null customerId");
+        if (StringUtils.isEmpty(customerId)) {
+            throw new InvalidParameterException("null/empty customerId");
         }
 
         try {
@@ -214,6 +230,8 @@ public class CustomerServiceImpl implements CustomerService {
             customer.setPhone(phone);
             customer.setEmail(email);
             customerDao.updateContact(customer);
+        } catch (FinderException ex) {
+            throw new CustomerNotFoundException(); 
         } catch (Exception ex) {
             throw new IllegalStateException("setAddress: " + ex.getMessage());
         }

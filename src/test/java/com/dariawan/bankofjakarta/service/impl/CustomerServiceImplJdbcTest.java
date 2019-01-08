@@ -9,7 +9,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath*:com/dariawan/bankofjakarta/**/spring-config-test.xml")
-public class CustomerServiceJdbcTest extends CustomerServiceTest {
+public class CustomerServiceImplJdbcTest extends CustomerServiceTest {
 
     @Autowired private CustomerService customerService;
     
