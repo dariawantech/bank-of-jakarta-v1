@@ -23,8 +23,6 @@ import com.dariawan.bankofjakarta.service.AccountService;
 import com.dariawan.bankofjakarta.service.TxService;
 import com.dariawan.bankofjakarta.service.impl.TxServiceImpl;
 import java.math.BigDecimal;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -155,6 +153,23 @@ public class SpringTestApp {
         */
     }
     
+    void testMultipleBeanConfigurationAndFunction() {
+        // Create the application from the multiple configuration
+        ApplicationContext appContext = new ClassPathXmlApplicationContext(
+                "com/dariawan/bankofjakarta/spring-tx-config.xml",
+                "com/dariawan/bankofjakarta/spring-dao-config.xml",
+                "com/dariawan/bankofjakarta/spring-service-config.xml",
+                "com/dariawan/bankofjakarta/spring-aop-config.xml");
+
+        AccountService accountService = appContext.getBean("accountService", AccountService.class);
+        try {
+            Account account = accountService.getDetails("5007");
+            System.out.println(account.getBalance());
+        } catch (InvalidParameterException|AccountNotFoundException ex) {
+            System.out.println("Exception: " + ex.getMessage());
+        }
+    }
+    
     void testTransferFunds() {
         ApplicationContext appContext = new ClassPathXmlApplicationContext(
                 "com/dariawan/bankofjakarta/spring-config.xml");
@@ -174,5 +189,5 @@ public class SpringTestApp {
         // app.testBeanConstructor();
         // app.testBeanSetter();
         // app.testBeanMixConstructorSetter();
-    }
+        }
 }
