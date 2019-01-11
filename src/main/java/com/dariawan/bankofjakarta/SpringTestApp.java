@@ -16,6 +16,7 @@ import com.dariawan.bankofjakarta.dao.impl.TxDaoImpl;
 import com.dariawan.bankofjakarta.domain.Account;
 import com.dariawan.bankofjakarta.exception.AccountNotFoundException;
 import com.dariawan.bankofjakarta.exception.IllegalAccountTypeException;
+import com.dariawan.bankofjakarta.exception.InsufficientCreditException;
 import com.dariawan.bankofjakarta.exception.InsufficientFundsException;
 import com.dariawan.bankofjakarta.exception.InvalidParameterException;
 import com.dariawan.bankofjakarta.service.AccountService;
@@ -138,10 +139,8 @@ public class SpringTestApp {
         AccountService accountService = appContext.getBean("accountService", AccountService.class);
         try {
             Account account = accountService.getDetails("5008");
-        } catch (InvalidParameterException ex) {
-            Logger.getLogger(SpringTestApp.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (AccountNotFoundException ex) {
-            Logger.getLogger(SpringTestApp.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InvalidParameterException|AccountNotFoundException ex) {
+            System.out.println("Exception: " + ex.getMessage());
         }
 
         // Look up the application service interface
@@ -154,6 +153,19 @@ public class SpringTestApp {
             System.out.println("Exception: " + ex.getMessage());
         }
         */
+    }
+    
+    void testTransferFunds() {
+        ApplicationContext appContext = new ClassPathXmlApplicationContext(
+                "com/dariawan/bankofjakarta/spring-config.xml");
+
+        TxService txService = appContext.getBean("txService", TxService.class);
+        try {
+            txService.transferFunds(new BigDecimal("200"), "Transfer 200", "5008", "5007");
+        } catch (InvalidParameterException|AccountNotFoundException|
+                InsufficientFundsException|InsufficientCreditException ex) {
+            System.out.println("Exception: " + ex.getMessage());
+        }        
     }
     
     public static void main(String[] args) {
